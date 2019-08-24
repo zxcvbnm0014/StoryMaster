@@ -1,0 +1,14 @@
+.idea
+.DS_Store
+library
+local
+packages/story-master/node_modules
+temp
+settings
+auto/node_modules
+story-master-plugin.zip
+build
+
+# vim
+*.swp
+*.swo

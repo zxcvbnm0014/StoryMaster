@@ -1,0 +1,110 @@
+{
+  "name": "story-master",
+  "version": "0.1",
+  "description": "故事编辑器",
+  "author": "xu_yanfeng",
+  "public": false,
+  "public-time": "2019/04/23",
+  "scene-script": "core/scene.js",
+  "main": "main.js",
+  "preview": {
+    "run": "story-runner",
+    "story": "story-story",
+    "unit": "story-unit"
+  },
+  "main-menu": {
+    "StoryMaster/初始化": {
+      "message": "story-master:initPlugin"
+    },
+    "StoryMaster/默认布局": {
+      "message": "story-master:setDefaultLayout"
+    },
+    "StoryMaster/故事预览": {
+      "message": "story-master:preview"
+    },
+    "StoryMaster/剧情管理": {
+      "message": "story-master:openPlot"
+    },
+    "StoryMaster/片段管理": {
+      "message": "story-master:openPiece"
+    },
+    "StoryMaster/模版管理": {
+      "message": "story-master:openTemplate"
+    },
+    "StoryMaster/关于插件": {
+      "message": "story-master:openAbout"
+    },
+    "StoryMaster/OPEN": {
+      "del": true,
+      "message": "story-master:open"
+    },
+    "StoryMaster/TEST": {
+      "del": true,
+      "message": "story-master:openTest"
+    }
+  },
+  "panel": {
+    "main": "panel/index.js",
+    "type": "dockable",
+    "title": "story-master",
+    "width": 400,
+    "height": 300
+  },
+  "panel.preview": {
+    "main": "panel-preview/index.js",
+    "type": "dockable",
+    "title": "故事预览",
+    "width": 400,
+    "height": 300
+  },
+  "panel.template": {
+    "main": "panel-template/index.js",
+    "type": "dockable",
+    "title": "模版管理",
+    "width": 400,
+    "height": 300
+  },
+  "panel.piece": {
+    "main": "panel-piece/index.js",
+    "type": "dockable",
+    "title": "片段管理",
+    "width": 400,
+    "height": 300
+  },
+  "panel.plot": {
+    "main": "panel-plot/index.js",
+    "type": "dockable",
+    "title": "剧情管理",
+    "width": 400,
+    "height": 300
+  },
+  "panel.about": {
+    "main": "panel-about/index.js",
+    "type": "fixed-size",
+    "title": "关于插件",
+    "width": 400,
+    "height": 300
+  },
+  "panel.test": {
+    "main": "panel-test/index.js",
+    "type": "dockable",
+    "title": "TEST",
+    "width": 400,
+    "height": 300
+  },
+  "runtime-resource": {
+    "path": "code",
+    "name": "code"
+  },
+  "reload": {
+    "ignore": [
+      "code/**/*"
+    ]
+  },
+  "devDependencies": {
+    "vue": "^1.0.28"
+  },
+  "dependencies": {
+    "json-format": "^1.0.1"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "type": "dock-h",
+  "children": [
+
+    {
+      "type": "dock-v",
+      "children": [
+        {
+          "type": "dock-v",
+          "height": 300,
+          "children": [
+            {
+              "type": "panel",
+              "height":120,
+              "width": 240,
+              "active": 0,
+              "children": [
+                "story-master.plot"
+              ]
+            },
+            {
+              "type": "panel",
+              "width": 240,
+              "active": 0,
+              "children": [
+                "story-master.piece"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "dock-v",
+      "children": [
+        {
+          "type": "dock-h",
+          "children": [
+            {
+              "type": "panel",
+              "active": 0,
+              "children": [
+                "hierarchy"
+              ]
+            },
+            {
+              "type": "panel",
+              "active": 0,
+              "children": [
+                "scene"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "active": 0,
+          "children": [
+            "console",
+            "timeline",
+            "story-master.preview"
+          ]
+        }
+      ]
+    },
+
+    {
+      "type": "panel",
+      "active": 0,
+      "children": [
+        "inspector"
+      ]
+    },
+    {
+      "type": "panel",
+      "active": 0,
+      "children": [
+        "assets"
+      ]
+    }
+  ]
+}

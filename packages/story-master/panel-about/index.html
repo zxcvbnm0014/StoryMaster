@@ -1,0 +1,20 @@
+<div class="layout vertical center fit">
+    <div class="layout horizontal center" style="margin-top: 40px;">
+        <img src="packages://story-master/assets/icon.png" style="width: 100px;">
+        <div style="margin-left: 20px;">
+            <h2 style="text-align: left; margin-top: 20px;">
+                <a href="{{doc}}">Story-Master</a>
+            </h2>
+            <h3 style="text-align: left; margin-top: 10px;">
+                <a href="{{update}}"> Ver{{version}} </a>
+            </h3>
+            <a href="http://wpa.qq.com/msgrd?v=3&uin=774177933&site=qq&menu=yes">QQ联系我</a>
+        </div>
+    </div>
+
+    <div class="flex-1"></div>
+    <div class="layout horizontal   end-justified  " style="width: 100%;" v-show="time!==null">
+        <span style="color: #ff8600; padding-right: 10px;">构建时间:{{time}} </span>
+    </div>
+</div>
+

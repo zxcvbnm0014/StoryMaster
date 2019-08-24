@@ -1,0 +1,26 @@
+<div>
+
+    <ui-prop name="模板" style="padding-top: 10px;">
+        <ui-asset v-value="tempPrefab" class="flex-1">
+
+
+        </ui-asset>
+    </ui-prop>
+    <ui-prop name="背景图" style="padding-top: 10px;">
+        <ui-asset v-value="bg" class="flex-1">
+
+
+        </ui-asset>
+
+    </ui-prop>
+
+    <ui-prop name="对话" auto-height>
+        <ui-text-area resize-v v-value="talkWord" @blur="onBlurTalkWord" class="flex-1"></ui-text-area>
+    </ui-prop>
+    <ui-prop name="语速">w
+        <ui-select class="flex-1">
+            <option value="1"></option>
+        </ui-select>
+    </ui-prop>
+    <ui-button @confirm="onBtnClick">新建模板</ui-button>
+</div>

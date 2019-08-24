@@ -1,0 +1,63 @@
+<ui-prop v-prop="target.action" :multi-values="multi"></ui-prop>
+
+<!--无-->
+<div v-show="target.action.value===0">
+
+
+</div>
+<div v-show="target.action.value!==0">
+    <ui-prop v-prop="target.delayTime"></ui-prop>
+    <ui-prop v-prop="target.actionTime"></ui-prop>
+    <!--渐隐-->
+    <div v-show="target.action.value===1">
+
+    </div>
+
+    <!--渐显-->
+    <div v-show="target.action.value===2">
+
+    </div>
+
+    <!--震动-->
+    <div v-show="target.action.value===3">
+        <ui-prop v-prop="target.shakeStrength"></ui-prop>
+    </div>
+
+    <!--闪烁-->
+    <div v-show="target.action.value===4">
+        <ui-prop v-prop="target.blinkCount"></ui-prop>
+    </div>
+
+
+    <!--缩放-->
+    <div v-show="target.action.value===5">
+        <ui-prop v-prop="target.scaleSize"></ui-prop>
+    </div>
+
+    <!--位移-->
+    <div v-show="target.action.value===6">
+        <ui-prop v-prop="target.moveBegan"></ui-prop>
+        <ui-prop v-prop="target.moveEnd"></ui-prop>
+    </div>
+
+    <!--渐变至-->
+    <div v-show="target.action.value===7">
+        <ui-prop v-prop="target.fadeStart"></ui-prop>
+        <ui-prop v-prop="target.fadeStop"></ui-prop>
+    </div>
+
+    <!--颜色渐变至-->
+    <div v-show="target.action.value===8">
+        <ui-prop v-prop="target.startRed"></ui-prop>
+        <ui-prop v-prop="target.startGreen"></ui-prop>
+        <ui-prop v-prop="target.startBlue"></ui-prop>
+        <ui-prop v-prop="target.stopRed"></ui-prop>
+        <ui-prop v-prop="target.stopGreen"></ui-prop>
+        <ui-prop v-prop="target.stopBlue"></ui-prop>
+    </div>
+
+    <div class="layout horizontal end-justified">
+        <ui-button class="red" v-value="target.preview.value" @confirm="onBtnClickPreview">预览</ui-button>
+    </div>
+</div>
+

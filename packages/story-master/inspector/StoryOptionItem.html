@@ -1,0 +1,14 @@
+<ui-prop v-prop="target.menuText"></ui-prop>
+<ui-prop v-prop="target.audio"></ui-prop>
+<ui-prop v-prop="target.effect"></ui-prop>
+<ui-prop name="跳转剧情">
+    <div class="layout horizontal flex-1">
+        <ui-select class="flex-1" v-value="target.jumpPlot.value" @change="onChangeJumpPlot">
+            <option v-for="item in allPlot " v-value="item.id">
+                {{item.name}}
+            </option>
+        </ui-select>
+    </div>
+
+</ui-prop>
+

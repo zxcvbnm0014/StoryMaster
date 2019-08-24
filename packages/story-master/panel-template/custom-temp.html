@@ -1,0 +1,16 @@
+<div class="layout horizontal " style="width: 100%;padding-top: 10px;margin-bottom: 3px;min-height: 30px;"
+     @contextmenu="onCustomTempMenu">
+    <div style="width: 35%;min-width: 100px;margin-right: 5px;" class="layout horizontal">
+        <div style="margin-left: 14px;" class="flex-1 layout horizontal center">
+            <span class="flex-1" v-show="!isRename" @dblclick="onDoubleClickRename">{{data.name}}</span>
+            <input class="flex-1" @focus="onFocus" v-el:rename v-show="isRename" autofocus @blur="onChangeName"
+                   v-model="data.name"
+                   style="border: 0;">
+        </div>
+    </div>
+    <div class="flex-1 layout horizontal center">
+        <ui-asset v-value="prefabUUID" type="cc.Prefab" @change="onChangePrefab" class="flex-1"></ui-asset>
+        <ui-button v-show="prefabUUID" class="blue" @confirm="onBtnEditorPrefab">编辑</ui-button>
+        <ui-button v-show="prefabUUID" @confirm="onBtnAddPrefab">添加</ui-button>
+    </div>
+</div>

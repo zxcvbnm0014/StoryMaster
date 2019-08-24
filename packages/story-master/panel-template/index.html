@@ -1,0 +1,23 @@
+<div class="layout vertical " style="height: 100%;">
+    <ui-prop name="对话控件" style="padding-top: 10px; min-height: 40px;">
+        <ui-asset class="flex-1" type="cc.Prefab" v-value="templateTalkPrefabUUID"
+                  @change="onChangePrefabTalk"></ui-asset>
+        <ui-button v-show="templateTalkPrefab" class="blue" @confirm="onBtnClickEditorTalkPrefab">编辑</ui-button>
+        <ui-button v-show="templateTalkPrefab" @confirm="onBtnClickAddTalkPrefab">添加</ui-button>
+    </ui-prop>
+    <ui-prop name="选项控件" style="padding-top: 10px;min-height: 40px;">
+        <ui-asset class="flex-1" type="cc.Prefab" v-value="templateOptionPrefabUUID"
+                  @change="onChangePrefabOption"></ui-asset>
+        <!--todo v-show="isCanEditorOptions" 使用默认的预制不能编辑-->
+        <ui-button v-show="templateOptionPrefab" class="blue" @confirm="onBtnClickEditorOptionPrefab" >编辑</ui-button>
+        <ui-button v-show="templateOptionPrefab" @confirm="onBtnClickAddOptionPrefab">添加</ui-button>
+    </ui-prop>
+    <hr style="  margin: 5px 0 1px 0;width: 100%;"/>
+    <div class="flex-1 layout vertical" style="overflow-x: auto;overflow-y:scroll;">
+        <custom-temp v-for="item in customTemp" :data="item"></custom-temp>
+    </div>
+
+    <ui-button class="blue" style="width: 100%;" @confirm="onBtnClickAddCustomTemplate">
+        添加自定义模版
+    </ui-button>
+</div>

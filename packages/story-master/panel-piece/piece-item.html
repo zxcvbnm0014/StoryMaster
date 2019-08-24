@@ -1,0 +1,26 @@
+<div class="layout vertical piece-item"
+     @click="onClickOpenPrefab"
+     @contextmenu="onPieceMenu"
+     :class="{'piece-item-selected':isSelected}">
+
+    <!--内容-->
+    <div v-show="data.type == 1" class="flex-1">
+        <div class="flex-1">
+            <span style="margin-left: 13px;">{{data.name}}</span>
+        </div>
+    </div>
+    <!--强制跳转-->
+    <div v-show="data.type == 2" class="layout vertical flex-1"
+         style="width: 100%;justify-content: center;background-color: #aa3d00">
+        <span v-show="false" style="margin-left: 13px;">{{data.name}}</span>
+        <ui-prop name="强制跳转">
+            <ui-select class="flex-1" v-value="data.jump" @change="onChangeJumpPlot">
+                <option v-for="item in allPlot " v-value="item.id">
+                    {{item.name}}
+                </option>
+            </ui-select>
+        </ui-prop>
+    </div>
+
+    <hr style="margin:0 0 0 0;">
+</div>

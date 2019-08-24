@@ -1,0 +1,25 @@
+<div>
+    <div class="layout vertical plot-item " @mouseover="onMouseOver"
+         @mouseout="onMouseOut" @click="onItemClick"
+         @contextmenu="onPlotItemMenu">
+
+        <div class="layout horizontal center flex-1 " style="width: 100%;"
+             :class="{'plot-item-selected':isSelected}">
+            <i id="foldIcon" @click="onClickFold" :class="_foldClass()"
+               :style="{visibility:data.children.length>0?'visible':'hidden'}"></i>
+            <div class="layout horizontal flex-1" v-show="!isRename" @dblclick="onDoubleClickRename"
+                 style="height: 14px;">
+                <span class="flex-1">{{data.name}}</span>
+            </div>
+            <input v-el:rename v-show="isRename" class="flex-1" autofocus @blur="onChangeName" v-model="data.name"
+                   style="border: 0;">
+        </div>
+
+
+    </div>
+
+    <div v-show="!data.fold" style="margin-left: 20px;">
+        <plot-item v-for="item in data.children" :data="item"></plot-item>
+    </div>
+</div>
+
