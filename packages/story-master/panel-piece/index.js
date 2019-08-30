@@ -268,7 +268,7 @@ Editor.Panel.extend({
                             this.$root.$emit(Msg.PieceItemSelected, uuid);
                             // Editor.Ipc.sendToAll('assets:hint', uuid);
                             Editor.Ipc.sendToAll('scene:enter-prefab-edit-mode', uuid);
-                        }.bind(this), 10);
+                        }.bind(this), 300);
                     } else {
 
                     }
