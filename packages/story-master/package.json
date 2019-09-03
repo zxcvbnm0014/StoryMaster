@@ -105,6 +105,7 @@
     "vue": "^1.0.28"
   },
   "dependencies": {
+    "async": "^3.1.0",
     "json-format": "^1.0.1"
   }
 }
