@@ -105,19 +105,23 @@ Editor.Panel.extend({
 
                 _findItemByID(data, id) {
                     if (data.id === id) {
-                        return data;
+                        return  [data];
                     }
+
                     let children = data.children;
+
                     if (children && children.length > 0) {
                         for (let i = 0; i < children.length; i++) {
                             let item = children[i];
-                            let ret = this._findItemByID(item, id);
+                            let [ret, father, idx] = this._findItemByID(item, id);
+
                             if (ret) {
-                                return ret;
+                                return  [ret, father || data, idx || i];
                             }
                         }
                     }
-                    return null;
+
+                    return  [null];
                 },
 
                 createNewPlot() {
@@ -135,8 +139,22 @@ Editor.Panel.extend({
                     return  [pieceID, newPlot];
                 },
 
+                addSiblingItem(data) {
+                    let [ret, father, idx] = this._findItemByID(this.plotData, data.id);
+
+                    if (ret) {
+                        const [pieceID, newPlot] = this.createNewPlot();
+
+                        father.children.splice(idx + 1, 0, newPlot);
+                        father.fold = false;
+
+                        this._savePlot();
+                        this._addNewPiece(pieceID);
+                    }
+                },
+
                 addItem(data) {
-                    let ret = this._findItemByID(this.plotData, data.id);
+                    let [ret] = this._findItemByID(this.plotData, data.id);
 
                     if (ret) {
                         const [pieceID, newPlot] = this.createNewPlot();
@@ -236,7 +254,7 @@ Editor.Panel.extend({
                             }
                         }
                         if (delItem) {
-                            let ret2 = this._findItemByID(this.plotData, data.id);
+                            let [ret2] = this._findItemByID(this.plotData, data.id);
                             ret2.fold = false;
                             ret2.children.push(delItem);
                             this._savePlot();
@@ -259,6 +277,9 @@ Editor.Panel.extend({
         },
         onPlotMenuAddItem(event, data) {
             this.plugin.addItem(data);
+        },
+        onPlotMenuAddSiblingItem(event, data) {
+            this.plugin.addSiblingItem(data);
         },
         onItemFold(event, data) {
             this.plugin._savePlot();
