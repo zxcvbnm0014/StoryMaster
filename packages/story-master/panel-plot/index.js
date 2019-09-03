@@ -119,30 +119,41 @@ Editor.Panel.extend({
                     }
                     return null;
                 },
+
+                createNewPlot() {
+                    let pieceID = Editor.Utils.UuidUtils.uuid();
+                    let newPlot = {
+                        id: Editor.Utils.UuidUtils.uuid(),
+                        fold: true,
+                        root: false,
+                        name: "剧情" + (Math.random() * 100).toFixed(0),
+                        children: [],
+                        next: null,
+                        piece: pieceID,
+                    };
+
+                    return  [pieceID, newPlot];
+                },
+
                 addItem(data) {
                     let ret = this._findItemByID(this.plotData, data.id);
-                    let plotID = Editor.Utils.UuidUtils.uuid();
-                    let pieceID = Editor.Utils.UuidUtils.uuid();
+
                     if (ret) {
+                        const [pieceID, newPlot] = this.createNewPlot();
+
                         ret.fold = false;
-                        ret.children.push({
-                            id: plotID,
-                            fold: true,
-                            root: false,
-                            name: "剧情" + (Math.random() * 100).toFixed(0),
-                            children: [],
-                            next: null,
-                            piece: pieceID,
-                        });
+                        ret.children.push(newPlot);
+
                         // piece相连
                         this._savePlot();
                         let b = this._addNewPiece(pieceID);
+
                         if (b) {
                             // Editor.Ipc.sendToPanel("story-master.piece", 'onPieceData', pieceID);
                         }
                     }
-
                 },
+
                 _addNewPiece(id) {
                     let url = Editor.url(StoryMaster.GameCfg.piece.plugin);
                     if (Fs.existsSync(url)) {
