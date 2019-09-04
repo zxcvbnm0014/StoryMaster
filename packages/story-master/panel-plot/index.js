@@ -105,44 +105,73 @@ Editor.Panel.extend({
 
                 _findItemByID(data, id) {
                     if (data.id === id) {
-                        return data;
+                        return  [data];
                     }
+
                     let children = data.children;
+
                     if (children && children.length > 0) {
                         for (let i = 0; i < children.length; i++) {
                             let item = children[i];
-                            let ret = this._findItemByID(item, id);
+                            let [ret, father, idx] = this._findItemByID(item, id);
+
                             if (ret) {
-                                return ret;
+                                return  [ret, father || data, idx || i];
                             }
                         }
                     }
-                    return null;
+
+                    return  [null];
                 },
-                addItem(data) {
-                    let ret = this._findItemByID(this.plotData, data.id);
-                    let plotID = Editor.Utils.UuidUtils.uuid();
+
+                createNewPlot() {
                     let pieceID = Editor.Utils.UuidUtils.uuid();
+                    let newPlot = {
+                        id: Editor.Utils.UuidUtils.uuid(),
+                        fold: true,
+                        root: false,
+                        name: "剧情" + (Math.random() * 100).toFixed(0),
+                        children: [],
+                        next: null,
+                        piece: pieceID,
+                    };
+
+                    return  [pieceID, newPlot];
+                },
+
+                addSiblingItem(data) {
+                    let [ret, father, idx] = this._findItemByID(this.plotData, data.id);
+
                     if (ret) {
+                        const [pieceID, newPlot] = this.createNewPlot();
+
+                        father.children.splice(idx + 1, 0, newPlot);
+                        father.fold = false;
+
+                        this._savePlot();
+                        this._addNewPiece(pieceID);
+                    }
+                },
+
+                addItem(data) {
+                    let [ret] = this._findItemByID(this.plotData, data.id);
+
+                    if (ret) {
+                        const [pieceID, newPlot] = this.createNewPlot();
+
                         ret.fold = false;
-                        ret.children.push({
-                            id: plotID,
-                            fold: true,
-                            root: false,
-                            name: "剧情" + (Math.random() * 100).toFixed(0),
-                            children: [],
-                            next: null,
-                            piece: pieceID,
-                        });
+                        ret.children.push(newPlot);
+
                         // piece相连
                         this._savePlot();
                         let b = this._addNewPiece(pieceID);
+
                         if (b) {
                             // Editor.Ipc.sendToPanel("story-master.piece", 'onPieceData', pieceID);
                         }
                     }
-
                 },
+
                 _addNewPiece(id) {
                     let url = Editor.url(StoryMaster.GameCfg.piece.plugin);
                     if (Fs.existsSync(url)) {
@@ -225,7 +254,7 @@ Editor.Panel.extend({
                             }
                         }
                         if (delItem) {
-                            let ret2 = this._findItemByID(this.plotData, data.id);
+                            let [ret2] = this._findItemByID(this.plotData, data.id);
                             ret2.fold = false;
                             ret2.children.push(delItem);
                             this._savePlot();
@@ -248,6 +277,9 @@ Editor.Panel.extend({
         },
         onPlotMenuAddItem(event, data) {
             this.plugin.addItem(data);
+        },
+        onPlotMenuAddSiblingItem(event, data) {
+            this.plugin.addSiblingItem(data);
         },
         onItemFold(event, data) {
             this.plugin._savePlot();

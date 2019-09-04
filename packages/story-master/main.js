@@ -218,6 +218,12 @@ module.exports = {
             let BrowserWindow = electron.BrowserWindow;
             let template = [
                 {
+                    label: '添加平级剧情',
+                    click() {
+                        Editor.Ipc.sendToPanel('story-master.plot', 'onPlotMenuAddSiblingItem', data);
+                    }
+                },
+                {
                     label: '添加子剧情',
                     click() {
                         Editor.Ipc.sendToPanel('story-master.plot', 'onPlotMenuAddItem', data);
