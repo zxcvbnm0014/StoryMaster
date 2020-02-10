@@ -30,7 +30,7 @@ Editor.Panel.extend({
                 },
             },
             methods: {
-                initCfg(){
+                initCfg() {
                     Core.initCfg();
                     // Editor.Ipc.sendToMain('story-master:onPlotItemMenu', event.x, event.y, null);
 
@@ -105,7 +105,7 @@ Editor.Panel.extend({
 
                 _findItemByID(data, id) {
                     if (data.id === id) {
-                        return  [data];
+                        return [data];
                     }
 
                     let children = data.children;
@@ -116,12 +116,12 @@ Editor.Panel.extend({
                             let [ret, father, idx] = this._findItemByID(item, id);
 
                             if (ret) {
-                                return  [ret, father || data, idx || i];
+                                return [ret, father || data, idx || i];
                             }
                         }
                     }
 
-                    return  [null];
+                    return [null];
                 },
 
                 createNewPlot() {
@@ -136,13 +136,13 @@ Editor.Panel.extend({
                         piece: pieceID,
                     };
 
-                    return  [pieceID, newPlot];
+                    return [pieceID, newPlot];
                 },
 
                 addSiblingItem(data) {
                     let [ret, father, idx] = this._findItemByID(this.plotData, data.id);
 
-                    if (ret) {
+                    if (ret && father) {
                         const [pieceID, newPlot] = this.createNewPlot();
 
                         father.children.splice(idx + 1, 0, newPlot);
@@ -150,6 +150,8 @@ Editor.Panel.extend({
 
                         this._savePlot();
                         this._addNewPiece(pieceID);
+                    } else {
+                        Editor.log('添加平级剧情失败!');
                     }
                 },
 

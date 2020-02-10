@@ -12,3 +12,4 @@ build
 # vim
 *.swp
 *.swo
+node_modules/

@@ -1,0 +1,31 @@
+{
+  "name": "story-master-plugin",
+  "version": "1.0.0",
+  "description": "avg游戏插件",
+  "directories": {
+    "doc": "doc"
+  },
+  "dependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.0.1",
+    "husky": "^4.2.1",
+    "lint-staged": "^10.0.7",
+    "prettier": "^1.19.1",
+    "stylelint": "^13.1.0",
+    "stylelint-config-standard": "^18.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tidys/story-master-plugin.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tidys/story-master-plugin/issues"
+  },
+  "homepage": "https://github.com/tidys/story-master-plugin#readme"
+}
