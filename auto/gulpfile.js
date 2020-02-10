@@ -334,11 +334,18 @@ var packagePlugin = function (pluginDirName, options) {
                 fse.removeSync(pluginTmpPath);
             }
             // 在文件夹中展示打包文件
-            let exec = require('child_process').exec;
             let platform = require('os').platform();
+            let cmd = null
             if (platform === 'darwin') {
-                let cmd = "open " + pluginOutPath;
+                cmd = "open " + pluginOutPath;
+
+            } else if (platform === 'win32') {
+                cmd = `explorer ${pluginOutPath}`
+            }
+
+            if (cmd) {
                 console.log('😂[CMD] ' + cmd);
+                let exec = require('child_process').exec;
                 exec(cmd, function (error, stdout, stderr) {
                     if (error) {
                         console.log(stderr);
@@ -346,8 +353,6 @@ var packagePlugin = function (pluginDirName, options) {
                     }
                     console.log(stdout);
                 }.bind(this));
-            } else if (platform === 'win32') {
-                // todo win
             }
         }.bind(this))
         .on('error', function () {

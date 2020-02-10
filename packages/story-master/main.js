@@ -87,7 +87,6 @@ module.exports = {
 
         },
         'open'() {
-            debugger
             Editor.Panel.open('story-master');
         },
         openTest() {

@@ -10,7 +10,7 @@ const PreviewStory = Editor.lang === 'zh' ? '故事预览' : 'Story Test';
 function _addTag(uiSelect, value, text) {
     let children = uiSelect.children;
 
-    var isAdd = false;
+    let isAdd = false;
     for (let i = 0; i < children.length; i++) {
         let item = children[i];
         if (item.value === value) {
@@ -21,7 +21,7 @@ function _addTag(uiSelect, value, text) {
     if (isAdd) {
         console.log("已经添加过标签了");
     } else {
-        var option = document.createElement("option");
+        let option = document.createElement("option");
         option.text = text;
         option.value = value;
         uiSelect.append(option);
@@ -29,12 +29,12 @@ function _addTag(uiSelect, value, text) {
 }
 
 function addTagToPlayButtonsWith$2_1_1() {
-    var previewArray = document.getElementsByClassName("preview");
+    let previewArray = document.getElementsByClassName("preview");
     if (previewArray && previewArray.length > 0) {
-        var preview = previewArray[0];
-        var uiSelectArray = preview.getElementsByTagName("ui-select");
+        let preview = previewArray[0];
+        let uiSelectArray = preview.getElementsByTagName("ui-select");
         if (uiSelectArray && uiSelectArray.length) {
-            var uiSelect = uiSelectArray [0];
+            let uiSelect = uiSelectArray [0];
             _addTag(uiSelect, PkgPreview.story, PreviewStory);
             _addTag(uiSelect, PkgPreview.unit, PreviewUnit);
             return true;
@@ -46,7 +46,7 @@ function addTagToPlayButtonsWith$2_1_1() {
 function _removeTag(uiSelect, value, text) {
     let children = uiSelect.children;
 
-    var isIn = false;
+    let isIn = false;
     for (let i = 0; i < children.length; i++) {
         let item = children[i];
         if (item.value === value) {
@@ -59,12 +59,12 @@ function _removeTag(uiSelect, value, text) {
 }
 
 function removeTagToPlayButtonsWith$2_1_1() {
-    var previewArray = document.getElementsByClassName("preview");
+    let previewArray = document.getElementsByClassName("preview");
     if (previewArray && previewArray.length > 0) {
-        var preview = previewArray[0];
-        var uiSelectArray = preview.getElementsByTagName("ui-select");
+        let preview = previewArray[0];
+        let uiSelectArray = preview.getElementsByTagName("ui-select");
         if (uiSelectArray && uiSelectArray.length) {
-            var uiSelect = uiSelectArray [0];
+            let uiSelect = uiSelectArray [0];
             _removeTag(uiSelect, PkgPreview.story, PreviewStory);
             _removeTag(uiSelect, PkgPreview.unit, PreviewUnit);
             return true;
