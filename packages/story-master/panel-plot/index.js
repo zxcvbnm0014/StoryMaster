@@ -1,10 +1,12 @@
-let Fs = require("fire-fs");
-let Core = Editor.require("packages://story-master/core/core.js");
-let StoryMaster = Editor.require("packages://story-master/code/StoryMaster.js");
-let JsonFormat = Editor.require("packages://story-master/node_modules/json-format");
+let Fs = require('fire-fs');
+let Core = Editor.require('packages://story-master/core/core.js');
+let StoryMaster = Editor.require('packages://story-master/code/StoryMaster.js');
+let JsonFormat = Editor.require(
+    'packages://story-master/node_modules/json-format'
+);
 
 let CutPlotItem = null;
-Editor.require("packages://story-master/panel-plot/plot-item.js")();
+Editor.require('packages://story-master/panel-plot/plot-item.js')();
 Editor.Panel.extend({
     style: Core.loadFile('panel-plot/index.css'),
     template: Core.loadFile('panel-plot/index.html'),
@@ -25,40 +27,34 @@ Editor.Panel.extend({
                     id: Editor.Utils.UuidUtils.uuid(),
                     root: true,
                     fold: false,
-                    name: "我的剧情",
-                    children: []
+                    name: '我的剧情',
+                    children: [],
                 },
             },
             methods: {
                 initCfg() {
                     Core.initCfg();
                     // Editor.Ipc.sendToMain('story-master:onPlotItemMenu', event.x, event.y, null);
-
                 },
-                onAddPlot() {
-                },
+                onAddPlot() {},
 
                 onBtnClick() {
-                    Core.callSceneScript('getStoryPieceInfo', {}, function (error, data) {
-
-                    });
-
+                    Core.callSceneScript('getStoryPieceInfo', {}, function(
+                        error,
+                        data
+                    ) {});
                 },
-                onBlurTalkWord() {
-
-                },
+                onBlurTalkWord() {},
                 delItem(data) {
-                    let result = Editor.Dialog.messageBox(
-                        {
-                            type: "question",
-                            title: "提示",
-                            buttons: ['确定', '取消'],
-                            message: `确定要删除${data.name}?`,
-                            defaultId: 0,
-                            cancelId: 1,
-                            noLink: !0,
-                        }
-                    );
+                    let result = Editor.Dialog.messageBox({
+                        type: 'question',
+                        title: '提示',
+                        buttons: ['确定', '取消'],
+                        message: `确定要删除${data.name}?`,
+                        defaultId: 0,
+                        cancelId: 1,
+                        noLink: !0,
+                    });
                     if (result === 0) {
                         let ret = this._findItemParentById(this.plotData, data.id);
                         if (ret) {
@@ -74,7 +70,6 @@ Editor.Panel.extend({
                         }
                     }
                 },
-
 
                 _findItemParentById(root, id) {
                     let children = root.children;
@@ -130,7 +125,7 @@ Editor.Panel.extend({
                         id: Editor.Utils.UuidUtils.uuid(),
                         fold: true,
                         root: false,
-                        name: "剧情" + (Math.random() * 100).toFixed(0),
+                        name: '剧情' + (Math.random() * 100).toFixed(0),
                         children: [],
                         next: null,
                         piece: pieceID,
@@ -187,12 +182,9 @@ Editor.Panel.extend({
                         } else {
                             return false;
                         }
-
                     } else {
                         return false;
                     }
-
-
                 },
                 _savePlot() {
                     let url = Editor.url(StoryMaster.GameCfg.plot.plugin);
@@ -261,16 +253,15 @@ Editor.Panel.extend({
                             ret2.children.push(delItem);
                             this._savePlot();
                         } else {
-                            Editor.log("粘贴失败!");
+                            Editor.log('粘贴失败!');
                         }
                         CutPlotItem = null;
                     } else {
-                        Editor.log("请先剪切目标!");
+                        Editor.log('请先剪切目标!');
                     }
                 },
             },
-
-        })
+        });
     },
 
     messages: {
@@ -303,11 +294,14 @@ Editor.Panel.extend({
         },
         getCutItemID(event, data) {
             if (CutPlotItem && CutPlotItem.root === false) {
-                let ret = this.plugin._findItemParentById(this.plugin.plotData, CutPlotItem.id);
+                let ret = this.plugin._findItemParentById(
+                    this.plugin.plotData,
+                    CutPlotItem.id
+                );
                 event.reply && event.reply(CutPlotItem.id, ret.id);
             } else {
                 event.reply && event.reply(null, null);
             }
-        }
-    }
+        },
+    },
 });

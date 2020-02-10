@@ -1,7 +1,9 @@
-const Fs = require("fire-fs");
-const Path = require("fire-path");
-const PackageName = "story-master";
-const StoryMaster = Editor.require(`packages://${PackageName}/code/StoryMaster.js`);
+const Fs = require('fire-fs');
+const Path = require('fire-path');
+const PackageName = 'story-master';
+const StoryMaster = Editor.require(
+    `packages://${PackageName}/code/StoryMaster.js`
+);
 module.exports = {
     packageName: PackageName,
     loadFile(file) {
@@ -12,7 +14,7 @@ module.exports = {
             }
         } else {
             console.error(`文件名无效:${file}`);
-            return "";
+            return '';
         }
     },
 
@@ -21,10 +23,10 @@ module.exports = {
     },
     replaceSpecialChar(str) {
         str = str.toString();
-        str = str.replace(/"/g, "“");
-        str = str.replace(/'/g, "“");
-        str = str.replace(/\r/g, "");
-        str = str.replace(/\n/g, "");
+        str = str.replace(/"/g, '“');
+        str = str.replace(/'/g, '“');
+        str = str.replace(/\r/g, '');
+        str = str.replace(/\n/g, '');
         return str;
     },
 
@@ -49,30 +51,29 @@ module.exports = {
     },
     async makeDir(url) {
         let assetdb = this._getAssetsDB();
-        return await new Promise(function (resolve, reject) {
+        return await new Promise(function(resolve, reject) {
             if (!assetdb.exists(url)) {
-                assetdb.create(url, null, function (error, info) {
+                assetdb.create(url, null, function(error, info) {
                     if (error) {
                         reject(error);
                         return false;
                     } else {
                         resolve(info);
-                        console.log("创建目录成功: " + url);
+                        console.log('创建目录成功: ' + url);
                         return true;
                     }
-
-                })
+                });
             } else {
                 resolve(null);
             }
-        })
+        });
     },
     async writeFile(url, data) {
         let assetdb = this._getAssetsDB();
         let dir = Path.dirname(url);
         await this.makeDirs(dir);
-        return new Promise(function (resolve, reject) {
-            assetdb.create(url, data, function (error, info) {
+        return new Promise(function(resolve, reject) {
+            assetdb.create(url, data, function(error, info) {
                 if (error) {
                     reject(error);
                     return false;
@@ -80,20 +81,19 @@ module.exports = {
                     resolve(info);
                     return info;
                 }
-
             });
-        })
+        });
     },
     async queryUuidByUrl(url) {
-        return new Promise(function (resolve, reject) {
-            Editor.assetdb.queryUuidByUrl(url, function (error, info) {
+        return new Promise(function(resolve, reject) {
+            Editor.assetdb.queryUuidByUrl(url, function(error, info) {
                 if (error) {
                     reject(error);
                 } else {
                     resolve(info);
                 }
-            })
-        })
+            });
+        });
     },
     getTemplate() {
         let url = Editor.url(`packages://${PackageName}/package.json`);
@@ -114,7 +114,11 @@ module.exports = {
             EditorWin = Editor.remote.Window;
         }
         if (EditorWin) {
-            Editor.Ipc.sendToPanel('story-master.piece', 'forceSetOpenedPrefabID', null);
+            Editor.Ipc.sendToPanel(
+                'story-master.piece',
+                'forceSetOpenedPrefabID',
+                null
+            );
             EditorWin.main.resetLayout(`packages://${PackageName}/core/layout.json`);
         }
     },
@@ -123,10 +127,9 @@ module.exports = {
         (async () => {
             // 创建配置文件
             let cfgFiles = [
-                {url: StoryMaster.GameCfg.plot.plugin, init: "[]",},
-                {url: StoryMaster.GameCfg.piece.plugin, init: "{}",},
-                {url: StoryMaster.GameCfg.init.plugin, init: "{}",}
-
+                { url: StoryMaster.GameCfg.plot.plugin, init: '[]' },
+                { url: StoryMaster.GameCfg.piece.plugin, init: '{}' },
+                { url: StoryMaster.GameCfg.init.plugin, init: '{}' },
             ];
             for (let i = 0; i < cfgFiles.length; i++) {
                 let item = cfgFiles[i];
@@ -147,10 +150,10 @@ module.exports = {
             let temp = this.getTemplate();
 
             let array = [
-                //TODO piece模版待定,问题是如何自定义添加
+                // TODO piece模版待定,问题是如何自定义添加
                 // temp.StoryPiece,
                 temp.StoryTalk,
-                temp.StoryOptions
+                temp.StoryOptions,
             ];
             for (let i = 0; i < array.length; i++) {
                 let item = array[i];
@@ -170,5 +173,5 @@ module.exports = {
             }
             this.setDefaultLayout();
         })();
-    }
-}
+    },
+};

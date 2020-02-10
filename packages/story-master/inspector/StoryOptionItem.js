@@ -1,11 +1,11 @@
-let Core = Editor.require("packages://story-master/core/core.js");
-let StoryMaster = Editor.require("packages://story-master/code/StoryMaster.js");
-let Util = Editor.require("packages://story-master/core/util.js");
+let Core = Editor.require('packages://story-master/core/core.js');
+let StoryMaster = Editor.require('packages://story-master/code/StoryMaster.js');
+let Util = Editor.require('packages://story-master/core/util.js');
 
-let Fs = require("fire-fs");
+let Fs = require('fire-fs');
 let Path = require('fire-path');
 Vue.component('SM-StoryOptionItem', {
-    template: Core.loadFile("inspector/StoryOptionItem.html"),
+    template: Core.loadFile('inspector/StoryOptionItem.html'),
     created() {
         this.allPlot = Util.getPlotData();
     },
@@ -17,12 +17,11 @@ Vue.component('SM-StoryOptionItem', {
         },
         multi: {
             twoWay: true,
-            type: Boolean
-        }
+            type: Boolean,
+        },
     },
 
     methods: {
-
         onChangeJumpPlot() {
             // var data = {
             //     id: this.target.uuid.value,
@@ -35,15 +34,16 @@ Vue.component('SM-StoryOptionItem', {
         },
 
         onBtnClickPreview() {
-            let time = new Date().getTime().toString();
+            let time = new Date().getTime()
+                .toString();
             var data = {
                 id: this.target.uuid.value,
-                path: "preview",
-                type: "String",
+                path: 'preview',
+                type: 'String',
                 isSubProp: !1,
-                value: time
+                value: time,
             };
-            Editor.Ipc.sendToPanel("scene", "scene:set-property", data)
+            Editor.Ipc.sendToPanel('scene', 'scene:set-property', data);
         },
-    }
+    },
 });
