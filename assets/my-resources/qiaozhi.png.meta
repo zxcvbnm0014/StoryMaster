@@ -1,13 +1,16 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.3",
   "uuid": "e59fb069-21cf-4a94-9139-fc990c7e897c",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
   "subMetas": {
     "qiaozhi": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "da79c24d-829a-4536-b566-15c21fecc0fd",
       "rawTextureUuid": "e59fb069-21cf-4a94-9139-fc990c7e897c",
       "trimType": "auto",

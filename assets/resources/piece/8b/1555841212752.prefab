@@ -75,8 +75,6 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": 0,
-    "_rotationY": 0,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,
@@ -138,8 +136,6 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": 0,
-    "_rotationY": 0,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,
@@ -265,8 +261,6 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": 0,
-    "_rotationY": 0,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,
@@ -328,8 +322,6 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": -38,
-    "_rotationY": -38,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,
@@ -341,7 +333,13 @@
     "_skewY": 0,
     "_zIndex": 0,
     "groupIndex": 0,
-    "_id": ""
+    "_id": "",
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 38
+    }
   },
   {
     "__type__": "cc.Sprite",
@@ -430,8 +428,6 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": -28,
-    "_rotationY": -28,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,
@@ -443,7 +439,13 @@
     "_skewY": 0,
     "_zIndex": 0,
     "groupIndex": 0,
-    "_id": ""
+    "_id": "",
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 28
+    }
   },
   {
     "__type__": "cc.Sprite",
@@ -532,8 +534,6 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": -79,
-    "_rotationY": -79,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,
@@ -545,7 +545,13 @@
     "_skewY": 0,
     "_zIndex": 0,
     "groupIndex": 0,
-    "_id": ""
+    "_id": "",
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 79
+    }
   },
   {
     "__type__": "cc.Sprite",
@@ -634,8 +640,6 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": 40,
-    "_rotationY": 40,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,
@@ -647,7 +651,13 @@
     "_skewY": 0,
     "_zIndex": 0,
     "groupIndex": 0,
-    "_id": ""
+    "_id": "",
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": -40
+    }
   },
   {
     "__type__": "cc.Sprite",
@@ -736,8 +746,6 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": 78,
-    "_rotationY": 78,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,
@@ -749,7 +757,13 @@
     "_skewY": 0,
     "_zIndex": 0,
     "groupIndex": 0,
-    "_id": ""
+    "_id": "",
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": -78
+    }
   },
   {
     "__type__": "cc.Sprite",
@@ -838,8 +852,6 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": 15,
-    "_rotationY": 15,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,
@@ -851,7 +863,13 @@
     "_skewY": 0,
     "_zIndex": 0,
     "groupIndex": 0,
-    "_id": ""
+    "_id": "",
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": -15
+    }
   },
   {
     "__type__": "cc.Sprite",
@@ -940,8 +958,6 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": 0,
-    "_rotationY": 0,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,
@@ -1119,8 +1135,6 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": 0,
-    "_rotationY": 0,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,
@@ -1224,8 +1238,6 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": 0,
-    "_rotationY": 0,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,
@@ -1371,8 +1383,6 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": 0,
-    "_rotationY": 0,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,
@@ -1434,8 +1444,6 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": 0,
-    "_rotationY": 0,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,
@@ -1536,8 +1544,6 @@
       "y": 1,
       "z": 1
     },
-    "_rotationX": 0,
-    "_rotationY": 0,
     "_quat": {
       "__type__": "cc.Quat",
       "x": 0,

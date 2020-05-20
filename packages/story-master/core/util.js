@@ -1,6 +1,6 @@
-let StoryMaster = Editor.require("packages://story-master/code/StoryMaster.js");
-let Fs = require("fire-fs");
-let Path = require("fire-path");
+let StoryMaster = Editor.require('packages://story-master/code/StoryMaster.js');
+let Fs = require('fire-fs');
+let Path = require('fire-path');
 
 module.exports = {
     serializePlot(root) {
@@ -12,7 +12,7 @@ module.exports = {
         return array;
     },
     _serializePlot(data, array) {
-        array.push({id: data.id, name: data.name, piece: data.piece});
+        array.push({ id: data.id, name: data.name, piece: data.piece });
         for (let i = 0; i < data.children.length; i++) {
             this._serializePlot(data.children[i], array);
         }
@@ -26,6 +26,4 @@ module.exports = {
             return this.serializePlot(data);
         }
     },
-
-
-}
+};

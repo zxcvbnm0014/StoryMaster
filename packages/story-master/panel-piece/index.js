@@ -1,16 +1,18 @@
-let Fs = require("fire-fs");
-let Path = require("fire-path");
-let Core = Editor.require("packages://story-master/core/core.js");
-Editor.require("packages://story-master/panel-piece/piece-item.js")();
-let StoryMaster = Editor.require("packages://story-master/code/StoryMaster.js");
-let JsonFormat = Editor.require("packages://story-master/node_modules/json-format");
+let Fs = require('fire-fs');
+let Path = require('fire-path');
+let Core = Editor.require('packages://story-master/core/core.js');
+Editor.require('packages://story-master/panel-piece/piece-item.js')();
+let StoryMaster = Editor.require('packages://story-master/code/StoryMaster.js');
+let JsonFormat = Editor.require(
+    'packages://story-master/node_modules/json-format'
+);
 const Msg = Editor.require('packages://story-master/core/msg.js');
 
 let Op = {
     None: 0,
     Cut: 1,
     Copy: 2,
-}
+};
 
 let OpenedPrefabID = null;
 let bCutOrCopy = Op.None;
@@ -25,20 +27,23 @@ Editor.Panel.extend({
         this.plugin = new window.Vue({
             el: this.shadowRoot,
             created() {
-                console.log("created");
-                //TODO 将保存的piece数据放在主进程,当再次打开的时候去主进程获取
-                Editor.Ipc.sendToMain('story-master:getPieceData', function (data, event) {
-                    let retDataTest = {
-                        selectPlot: null,// 选择的剧情
-                        OpenedPrefabID: null,// 打开的prefab
-                    };
-                    if (data.selectPlot) {
-                        this.setPieceData(data.selectPlot);
-                    }
-                    if (data.OpenedPrefabID) {
-                        OpenedPrefabID = data.OpenedPrefabID;
-                    }
-                }.bind(this));
+                console.log('created');
+                // TODO 将保存的piece数据放在主进程,当再次打开的时候去主进程获取
+                Editor.Ipc.sendToMain(
+                    'story-master:getPieceData',
+                    function(data, event) {
+                        let retDataTest = {
+                            selectPlot: null, // 选择的剧情
+                            OpenedPrefabID: null, // 打开的prefab
+                        };
+                        if (data.selectPlot) {
+                            this.setPieceData(data.selectPlot);
+                        }
+                        if (data.OpenedPrefabID) {
+                            OpenedPrefabID = data.OpenedPrefabID;
+                        }
+                    }.bind(this)
+                );
             },
             data: {
                 plotData: null,
@@ -57,23 +62,21 @@ Editor.Panel.extend({
                 },
                 onBtnClickAddForceJump() {
                     if (this._findJumpItem()) {
-                        Editor.Dialog.messageBox(
-                            {
-                                type: "warning",
-                                title: "提示",
-                                buttons: ['确定'],
-                                message: `已经存在一个[跳转选项]\n不能重复添加!`,
-                                defaultId: 0,
-                                cancelId: 1,
-                                noLink: !0,
-                            }
-                        );
+                        Editor.Dialog.messageBox({
+                            type: 'warning',
+                            title: '提示',
+                            buttons: ['确定'],
+                            message: '已经存在一个[跳转选项]\n不能重复添加!',
+                            defaultId: 0,
+                            cancelId: 1,
+                            noLink: !0,
+                        });
                     } else {
                         let jumpData = {
                             id: Editor.Utils.UuidUtils.uuid(),
                             type: StoryMaster.Type.Pieces.PlotJump,
-                            name: "强制跳转",
-                            jump: "",
+                            name: '强制跳转',
+                            jump: '',
                         };
                         this.pieceData.push(jumpData);
                         this._savePiece();
@@ -86,14 +89,13 @@ Editor.Panel.extend({
                             let item = this.pieceData[i];
                             if (item.id === OpenedPrefabID) {
                                 // 如果连续输入中文,可能会包含ASCII为8的退格键
-                                let newWord = "";
-                                debugger
+                                let newWord = '';
                                 for (let i = 0; i < word.length; i++) {
                                     let ascii = word.charCodeAt(i);
                                     console.log(ascii);
                                     if (ascii === 8) {
-
-                                    } else if (ascii === 10) {// 换行符
+                                    } else if (ascii === 10) {
+                                        // 换行符
                                         newWord += '\\n';
                                     } else {
                                         newWord += word[i];
@@ -107,14 +109,15 @@ Editor.Panel.extend({
                     }
                 },
                 setPieceData(data) {
-                    Editor.Ipc.sendToMain('story-master:setPieceData', {selectPlot: data});
+                    Editor.Ipc.sendToMain('story-master:setPieceData', {
+                        selectPlot: data,
+                    });
                     if (data.root) {
                         this.plotData = null;
                         this.pieceID = null;
                         this.pieceData = [];
                         return;
                     }
-
 
                     this.plotData = data;
                     let id = data.piece;
@@ -134,9 +137,12 @@ Editor.Panel.extend({
                                 }
                             }
                             this.pieceData = pieces;
-                            setTimeout(function () {
-                                this.$root.$emit(Msg.PieceItemSelected, OpenedPrefabID);
-                            }.bind(this), 10);
+                            setTimeout(
+                                function() {
+                                    this.$root.$emit(Msg.PieceItemSelected, OpenedPrefabID);
+                                }.bind(this),
+                                10
+                            );
                         } else {
                             console.log(`未发现${id}的数据`);
                         }
@@ -155,16 +161,14 @@ Editor.Panel.extend({
                                     this._savePiece();
                                     return;
                                 } else {
-
                                 }
                             }
                         }
-                        Editor.error("插入片段失败!");
+                        Editor.error('插入片段失败!');
                     })();
                 },
                 onInsertItemAfter(data) {
                     (async () => {
-
                         let id = data.id;
                         for (let i = 0; i < this.pieceData.length; i++) {
                             let item = this.pieceData[i];
@@ -178,10 +182,8 @@ Editor.Panel.extend({
                                 }
                             }
                         }
-                        Editor.error("插入片段失败!");
-
+                        Editor.error('插入片段失败!');
                     })();
-
                 },
                 onDelItem(data) {
                     let id = data.id;
@@ -189,7 +191,10 @@ Editor.Panel.extend({
                         let item = this.pieceData[i];
                         if (item.id === id) {
                             this.pieceData.splice(i, 1);
-                            if (item.type === StoryMaster.Type.Pieces.Content || item.type === undefined) {
+                            if (
+                                item.type === StoryMaster.Type.Pieces.Content ||
+                item.type === undefined
+                            ) {
                                 this._savePiece(false);
                                 if (Editor.remote.assetdb.exists(item.prefab)) {
                                     Editor.assetdb.delete([item.prefab]);
@@ -197,13 +202,15 @@ Editor.Panel.extend({
                                         Editor.Ipc.sendToPanel('scene', 'scene:new-scene');
                                         // 删除了自己跳转场景
                                     } else {
-
                                     }
                                     OpenedPrefabID = null;
                                     // 选中项
-                                    setTimeout(function () {
-                                        this.$root.$emit(Msg.PieceItemSelected, OpenedPrefabID);
-                                    }.bind(this), 10);
+                                    setTimeout(
+                                        function() {
+                                            this.$root.$emit(Msg.PieceItemSelected, OpenedPrefabID);
+                                        }.bind(this),
+                                        10
+                                    );
                                 } else {
                                     Editor.log(`Prefab丢失,删除失败: ${item.prefab}`);
                                 }
@@ -228,7 +235,8 @@ Editor.Panel.extend({
 
                     if (Fs.existsSync(fullPath)) {
                         let originData = Fs.readFileSync(fullPath, 'utf-8');
-                        let time = new Date().getTime().toString();
+                        let time = new Date().getTime()
+                            .toString();
                         let dir = this.pieceID.substr(0, 2);
                         let newItemUrl = `${StoryMaster.GameCfg.piece.prefab}/${dir}/${time}.prefab`;
                         await Core.makeDirs(Path.dirname(newItemUrl));
@@ -238,7 +246,7 @@ Editor.Panel.extend({
                             return {
                                 id: result.uuid,
                                 type: StoryMaster.Type.Pieces.Content,
-                                name: "模版" + (Math.random() * 100).toFixed(0),
+                                name: '模版' + (Math.random() * 100).toFixed(0),
                                 prefab: result.url,
                             };
                         } else {
@@ -263,14 +271,18 @@ Editor.Panel.extend({
                 _openPrefab(uuid) {
                     if (OpenedPrefabID !== uuid) {
                         OpenedPrefabID = uuid;
-                        Editor.Ipc.sendToMain('story-master:setPieceData', {OpenedPrefabID: OpenedPrefabID});
-                        setTimeout(function () {
-                            this.$root.$emit(Msg.PieceItemSelected, uuid);
-                            // Editor.Ipc.sendToAll('assets:hint', uuid);
-                            Editor.Ipc.sendToAll('scene:enter-prefab-edit-mode', uuid);
-                        }.bind(this), 10);
+                        Editor.Ipc.sendToMain('story-master:setPieceData', {
+                            OpenedPrefabID: OpenedPrefabID,
+                        });
+                        setTimeout(
+                            function() {
+                                this.$root.$emit(Msg.PieceItemSelected, uuid);
+                                // Editor.Ipc.sendToAll('assets:hint', uuid);
+                                Editor.Ipc.sendToAll('scene:enter-prefab-edit-mode', uuid);
+                            }.bind(this),
+                            300
+                        );
                     } else {
-
                     }
                 },
 
@@ -307,12 +319,11 @@ Editor.Panel.extend({
                                             this.pieceData.splice(i + 1, 0, insert);
                                             this._openPrefab(insert.id);
                                             this._savePiece();
-                                            break
+                                            break;
                                         }
                                     }
                                 }
                                 CopyPieceItem = null;
-
                             })();
                         }
                     } else if (bCutOrCopy === Op.Cut) {
@@ -338,7 +349,6 @@ Editor.Panel.extend({
                                         break;
                                     }
                                 }
-
                             }
                             CutPieceItem = null;
                         }
@@ -397,14 +407,15 @@ Editor.Panel.extend({
 
                     Fs.writeFileSync(
                         Editor.url(StoryMaster.GameCfg.init.plugin),
-                        JsonFormat(testdata), 'utf-8'
+                        JsonFormat(testdata),
+                        'utf-8'
                     );
 
                     Editor.assetdb.refresh(StoryMaster.GameCfg.init.plugin);
-                    Editor.Ipc.sendToPanel("scene", "scene:play-on-device");
+                    Editor.Ipc.sendToPanel('scene', 'scene:play-on-device');
                 },
             },
-        })
+        });
     },
 
     messages: {
@@ -437,7 +448,9 @@ Editor.Panel.extend({
         openPrefab(event, data) {
             if (data.type === StoryMaster.Type.Pieces.PlotJump) {
                 OpenedPrefabID = data.id;
-                Editor.Ipc.sendToMain('story-master:setPieceData', {OpenedPrefabID: OpenedPrefabID});
+                Editor.Ipc.sendToMain('story-master:setPieceData', {
+                    OpenedPrefabID: OpenedPrefabID,
+                });
                 Editor.Ipc.sendToPanel('scene', 'scene:new-scene');
             } else {
                 this.plugin._openPrefab(data.id);
@@ -459,22 +472,25 @@ Editor.Panel.extend({
             this.plugin.onPieceTest(data);
         },
         getPieceCopyCutData(event) {
-            event.reply && event.reply({copy: CopyPieceItem, cut: CutPieceItem});
+            event.reply && event.reply({ copy: CopyPieceItem, cut: CutPieceItem });
         },
         onPieceMenuItemDownEnd(event, data) {
             this.plugin.onPieceMenuItemDownEnd(data);
         },
         'scene:enter-prefab-edit-mode'(event, data) {
             OpenedPrefabID = data;
-            Editor.Ipc.sendToMain('story-master:setPieceData', {OpenedPrefabID: OpenedPrefabID});
+            Editor.Ipc.sendToMain('story-master:setPieceData', {
+                OpenedPrefabID: OpenedPrefabID,
+            });
             this.plugin.$root.$emit(Msg.PieceItemSelected, OpenedPrefabID);
         },
         // 这个函数只有在默认布局的时候进行设置
         forceSetOpenedPrefabID(event, data) {
             OpenedPrefabID = data;
-            Editor.Ipc.sendToMain('story-master:setPieceData', {OpenedPrefabID: OpenedPrefabID});
+            Editor.Ipc.sendToMain('story-master:setPieceData', {
+                OpenedPrefabID: OpenedPrefabID,
+            });
             this.plugin.$root.$emit(Msg.PieceItemSelected, OpenedPrefabID);
-        }
-
-    }
+        },
+    },
 });
