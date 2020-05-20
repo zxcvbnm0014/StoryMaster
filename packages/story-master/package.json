@@ -55,42 +55,48 @@
     "type": "dockable",
     "title": "故事预览",
     "width": 400,
-    "height": 300
+    "height": 300,
+    "engineSupport": true
   },
   "panel.template": {
     "main": "panel-template/index.js",
     "type": "dockable",
     "title": "模版管理",
     "width": 400,
-    "height": 300
+    "height": 300,
+    "engineSupport": true
   },
   "panel.piece": {
     "main": "panel-piece/index.js",
     "type": "dockable",
     "title": "片段管理",
     "width": 400,
-    "height": 300
+    "height": 300,
+    "engineSupport": true
   },
   "panel.plot": {
     "main": "panel-plot/index.js",
     "type": "dockable",
     "title": "剧情管理",
     "width": 400,
-    "height": 300
+    "height": 300,
+    "engineSupport": true
   },
   "panel.about": {
     "main": "panel-about/index.js",
     "type": "fixed-size",
     "title": "关于插件",
     "width": 400,
-    "height": 300
+    "height": 300,
+    "engineSupport": true
   },
   "panel.test": {
     "main": "panel-test/index.js",
     "type": "dockable",
     "title": "TEST",
     "width": 400,
-    "height": 300
+    "height": 300,
+    "engineSupport": true
   },
   "runtime-resource": {
     "path": "code",
