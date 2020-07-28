@@ -7,7 +7,7 @@ const JsonFormat = Editor.require(
 const RightMenu = Editor.require('packages://story-master/core/rightMenu.js');
 const PlotMsg = Editor.require('packages://story-master/panel-plot/msg.js');
 let CutPlotItem = null;
-Editor.require('packages://story-master/panel-plot/plot-item.js')();
+Editor.require('packages://story-master/panel-plot/plot-item.js');
 Editor.Panel.extend({
     style: Core.loadFile('panel-plot/index.css'),
     template: Core.loadFile('panel-plot/index.html'),

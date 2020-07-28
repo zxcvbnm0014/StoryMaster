@@ -118,32 +118,6 @@ module.exports = {
             const Core = require('./core/core.js');
             Core.initCfg();
         },
-        onCustomTemplateMenu(event, x, y, data) {
-            let electron = require('electron');
-            let BrowserWindow = electron.BrowserWindow;
-            let template = [
-                {
-                    label: '删除',
-                    click() {
-                        Editor.Ipc.sendToPanel(
-                            'story-master.template',
-                            'onCustomTemplateMenu',
-                            data
-                        );
-                    },
-                },
-            ];
-            let editorMenu = new Editor.Menu(template, event.sender);
-
-            x = Math.floor(x);
-            y = Math.floor(y);
-            editorMenu.nativeMenu.popup(
-                BrowserWindow.fromWebContents(event.sender),
-                x,
-                y
-            );
-            editorMenu.dispose();
-        },
 
         'app:reload-on-device'(event) {
             let profileData = Editor.App._profile.data;
