@@ -1,16 +1,13 @@
 {
-  "ver": "2.3.3",
+  "ver": "2.2.0",
   "uuid": "bcf8c02e-61f0-4436-a7c7-229378f74084",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
-  "genMipmaps": false,
-  "packable": true,
-  "platformSettings": {},
   "subMetas": {
     "peoqi": {
-      "ver": "1.0.4",
+      "ver": "1.0.3",
       "uuid": "d7b58e85-ec7d-4a84-ada8-aff885365126",
       "rawTextureUuid": "bcf8c02e-61f0-4436-a7c7-229378f74084",
       "trimType": "auto",
