@@ -1,12 +1,15 @@
-let Fs = require('fire-fs');
-let Path = require('fire-path');
+const Fs = require('fire-fs');
+const Path = require('fire-path');
 let Core = Editor.require('packages://story-master/core/core.js');
-Editor.require('packages://story-master/panel-piece/piece-item.js')();
-let StoryMaster = Editor.require('packages://story-master/code/StoryMaster.js');
-let JsonFormat = Editor.require(
+const StoryMaster = Editor.require(
+    'packages://story-master/code/StoryMaster.js'
+);
+const JsonFormat = Editor.require(
     'packages://story-master/node_modules/json-format'
 );
 const Msg = Editor.require('packages://story-master/core/msg.js');
+const PieceMsg = Editor.require('packages://story-master/panel-piece/msg.js');
+const RightMenu = Editor.require('packages://story-master/core/rightMenu.js');
 
 let Op = {
     None: 0,
@@ -19,6 +22,7 @@ let bCutOrCopy = Op.None;
 let CopyPieceItem = null;
 let CutPieceItem = null;
 
+Editor.require('packages://story-master/panel-piece/piece-item.js');
 Editor.Panel.extend({
     style: Core.loadFile('panel-piece/index.css'),
     template: Core.loadFile('panel-piece/index.html'),
@@ -44,6 +48,7 @@ Editor.Panel.extend({
                         }
                     }.bind(this)
                 );
+                this.$root.$on(PieceMsg.OnPieceItemRightMenu, this._onItemRightMenu);
             },
             data: {
                 plotData: null,
@@ -51,6 +56,99 @@ Editor.Panel.extend({
                 pieceData: [],
             },
             methods: {
+                _onItemRightMenu(data) {
+                    let CopyPastData = { copy: CopyPieceItem, cut: CutPieceItem };
+                    let bPast = false;
+                    if (CopyPastData.cut || CopyPastData.copy) {
+                        bPast = true;
+                    }
+                    let options = {
+                        up: true,
+                        down: true,
+                        cut: true,
+                        copy: true,
+                        past: bPast,
+                    };
+
+                    this.onPieceItemMenu(data, options);
+                },
+                onPieceItemMenu(data, options) {
+                    let template = [
+                        {
+                            label: '插入模版片段(前边)',
+                            click: () => {
+                                this.onInsertItemBefore(data);
+                            },
+                        },
+                        {
+                            label: '插入模版片段(后边)',
+                            click: () => {
+                                this.onInsertItemAfter(data);
+                            },
+                        },
+                        { type: 'separator' },
+                        {
+                            label: '上移',
+                            enabled: options && options.up,
+                            click: () => {
+                                this.onPieceMenuItemUp(data);
+                            },
+                        },
+                        {
+                            label: '下移',
+                            enabled: options && options.down,
+                            click: () => {
+                                this.onPieceMenuItemDown(data);
+                            },
+                        },
+                        {
+                            label: '下移到末尾',
+                            enabled: options && options.down,
+                            click: () => {
+                                this.onPieceMenuItemDownEnd(data);
+                            },
+                        },
+                        { type: 'separator' },
+                        {
+                            label: '剪切',
+                            enabled: options && options.cut,
+                            click: () => {
+                                bCutOrCopy = Op.Cut;
+                                CutPieceItem = data;
+                            },
+                        },
+                        {
+                            label: '复制',
+                            enabled: options && options.copy,
+                            click: () => {
+                                bCutOrCopy = Op.Copy;
+                                CopyPieceItem = data;
+                            },
+                        },
+                        {
+                            label: '粘贴',
+                            enabled: options && options.past,
+                            click: () => {
+                                this.onPieceMenuPastItem(data);
+                            },
+                        },
+                        { type: 'separator' },
+                        {
+                            label: '删除',
+                            click: () => {
+                                this.onDelItem(data);
+                            },
+                        },
+                        { type: 'separator' },
+                        {
+                            label: '测试（需开启测试模式）',
+                            click: () => {
+                                this.onPieceTest(data);
+                            },
+                        },
+                    ];
+                    RightMenu.createRightMenu(template);
+                },
                 _findJumpItem() {
                     for (let i = 0; i < this.pieceData.length; i++) {
                         let item = this.pieceData[i];
@@ -425,26 +523,6 @@ Editor.Panel.extend({
         onPieceData(event, data) {
             this.plugin.setPieceData(data);
         },
-        onPieceMenuDel(event, data) {
-            this.plugin.onDelItem(data);
-        },
-        onPieceMenuInsertItemAfter(event, data) {
-            this.plugin.onInsertItemAfter(data);
-        },
-        onPieceMenuInsertItemBefore(event, data) {
-            this.plugin.onInsertItemBefore(data);
-        },
-        onPieceMenuItemCut(event, data) {
-            bCutOrCopy = Op.Cut;
-            CutPieceItem = data;
-        },
-        onPieceMenuCopyItem(event, data) {
-            bCutOrCopy = Op.Copy;
-            CopyPieceItem = data;
-        },
-        onPieceMenuPastItem(event, data) {
-            this.plugin.onPieceMenuPastItem(data);
-        },
         openPrefab(event, data) {
             if (data.type === StoryMaster.Type.Pieces.PlotJump) {
                 OpenedPrefabID = data.id;
@@ -461,21 +539,6 @@ Editor.Panel.extend({
         },
         getCurrentEditorPiecePrefab(event) {
             event.reply && event.reply(OpenedPrefabID);
-        },
-        onPieceMenuItemUp(event, data) {
-            this.plugin.onPieceMenuItemUp(data);
-        },
-        onPieceMenuItemDown(event, data) {
-            this.plugin.onPieceMenuItemDown(data);
-        },
-        onPieceTest(event, data) {
-            this.plugin.onPieceTest(data);
-        },
-        getPieceCopyCutData(event) {
-            event.reply && event.reply({ copy: CopyPieceItem, cut: CutPieceItem });
-        },
-        onPieceMenuItemDownEnd(event, data) {
-            this.plugin.onPieceMenuItemDownEnd(data);
         },
         'scene:enter-prefab-edit-mode'(event, data) {
             OpenedPrefabID = data;
