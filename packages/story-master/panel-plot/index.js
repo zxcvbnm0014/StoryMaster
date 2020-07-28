@@ -1,10 +1,11 @@
-let Fs = require('fire-fs');
+const Fs = require('fire-fs');
 let Core = Editor.require('packages://story-master/core/core.js');
 let StoryMaster = Editor.require('packages://story-master/code/StoryMaster.js');
-let JsonFormat = Editor.require(
+const JsonFormat = Editor.require(
     'packages://story-master/node_modules/json-format'
 );
-
+const RightMenu = Editor.require('packages://story-master/core/rightMenu.js');
+const PlotMsg = Editor.require('packages://story-master/panel-plot/msg.js');
 let CutPlotItem = null;
 Editor.require('packages://story-master/panel-plot/plot-item.js')();
 Editor.Panel.extend({
@@ -21,6 +22,7 @@ Editor.Panel.extend({
                     data = JSON.parse(data);
                     this.plotData.children = data;
                 }
+                this.$root.$on(PlotMsg.OnPlotItemRightMenu, this.OnPlotItemRightMenu);
             },
             data: {
                 plotData: {
@@ -32,6 +34,94 @@ Editor.Panel.extend({
                 },
             },
             methods: {
+                getCutItemID() {
+                    let id = null;
+                    let parent = null;
+                    if (CutPlotItem && CutPlotItem.root === false) {
+                        let ret = this._findItemParentById(this.plotData, CutPlotItem.id);
+                        id = CutPlotItem.id;
+                        parent = ret.id;
+                    }
+                    return { id, parent };
+                },
+                OnPlotItemRightMenu(data) {
+                    let { id, parent } = this.getCutItemID();
+                    let bPast = true;
+                    if (id) {
+                        if (parent && parent === data.id) {
+                            bPast = false;
+                        }
+                    } else {
+                        bPast = false;
+                    }
+
+                    let options = {
+                        cut: !data.root,
+                        past: bPast,
+                        del: !data.root,
+                    };
+                    this._createPlotItemMenu(data, options);
+                },
+                _createPlotItemMenu(data, options) {
+                    let template = [
+                        {
+                            label: '添加平级剧情',
+                            click: () => {
+                                this.addSiblingItem(data);
+                            },
+                        },
+                        {
+                            label: '添加子剧情',
+                            click: () => {
+                                this.addItem(data);
+                            },
+                        },
+                        { type: 'separator' },
+                        {
+                            label: '上移',
+                            click: () => {
+                                this.onPlotMenuItemUp(data);
+                            },
+                        },
+                        {
+                            label: '下移',
+                            click: () => {
+                                this.onPlotMenuItemDown(data);
+                            },
+                        },
+                        { type: 'separator' },
+                        // {
+                        //     label: '复制',
+                        //     click: () => {
+                        //         this.onPlotMenuItemCopy(data);
+                        //     },
+                        // },
+                        {
+                            label: '剪切',
+                            enabled: options.cut,
+                            click: () => {
+                                this.onPlotMenuItemCut(data);
+                            },
+                        },
+                        {
+                            label: '粘贴',
+                            enabled: options.past,
+                            click: () => {
+                                this.onPlotMenuItemPast(data);
+                            },
+                        },
+                        { type: 'separator' },
+
+                        {
+                            label: '删除',
+                            enabled: options.del,
+                            click: () => {
+                                this.delItem(data);
+                            },
+                        },
+                    ];
+                    RightMenu.createRightMenu(template);
+                },
                 initCfg() {
                     Core.initCfg();
                     // Editor.Ipc.sendToMain('story-master:onPlotItemMenu', event.x, event.y, null);
@@ -265,43 +355,8 @@ Editor.Panel.extend({
     },
 
     messages: {
-        onPlotMenuDel(event, data) {
-            this.plugin.delItem(data);
-        },
-        onPlotMenuAddItem(event, data) {
-            this.plugin.addItem(data);
-        },
-        onPlotMenuAddSiblingItem(event, data) {
-            this.plugin.addSiblingItem(data);
-        },
         onItemFold(event, data) {
             this.plugin._savePlot();
-        },
-        onPlotMenuItemUp(event, data) {
-            this.plugin.onPlotMenuItemUp(data);
-        },
-        onPlotMenuItemDown(event, data) {
-            this.plugin.onPlotMenuItemDown(data);
-        },
-        onPlotMenuItemCopy(event, data) {
-            this.plugin.onPlotMenuItemCopy(data);
-        },
-        onPlotMenuItemCut(event, data) {
-            this.plugin.onPlotMenuItemCut(data);
-        },
-        onPlotMenuItemPast(event, data) {
-            this.plugin.onPlotMenuItemPast(data);
-        },
-        getCutItemID(event, data) {
-            if (CutPlotItem && CutPlotItem.root === false) {
-                let ret = this.plugin._findItemParentById(
-                    this.plugin.plotData,
-                    CutPlotItem.id
-                );
-                event.reply && event.reply(CutPlotItem.id, ret.id);
-            } else {
-                event.reply && event.reply(null, null);
-            }
         },
     },
 });

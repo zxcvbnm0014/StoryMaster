@@ -1,5 +1,7 @@
 let Core = Editor.require('packages://story-master/core/core.js');
 const Msg = Editor.require('packages://story-master/core/msg.js');
+const PlotMsg = Editor.require('packages://story-master/panel-plot/msg.js');
+
 module.exports = function() {
     Vue.component('plot-item', {
         props: ['data'],
@@ -35,34 +37,9 @@ module.exports = function() {
             onMouseOver() {},
             onMouseOut() {},
             onPlotItemMenu(event) {
-                Editor.Ipc.sendToPanel(
-                    'story-master.plot',
-                    'getCutItemID',
-                    function(id, parent) {
-                        let bPast = true;
-                        if (id) {
-                            if (parent && parent === this.data.id) {
-                                bPast = false;
-                            }
-                        } else {
-                            bPast = false;
-                        }
-
-                        let options = {
-                            cut: !this.data.root,
-                            past: bPast,
-                            del: !this.data.root,
-                        };
-                        Editor.Ipc.sendToMain(
-                            'story-master:onPlotItemMenu',
-                            event.x,
-                            event.y,
-                            this.data,
-                            options
-                        );
-                    }.bind(this)
-                );
+                this.$root.$emit(PlotMsg.OnPlotItemRightMenu, this.data);
             },
+
             onItemClick() {
                 this.$root.$emit(Msg.PlotItemSelected, false);
                 this.isSelected = true;
