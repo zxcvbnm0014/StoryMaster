@@ -9,6 +9,10 @@ let StoryMaster = {
         UserTouch: 'StoryMaster_Msg_UserTouch', // 用户点击
     },
     Type: {
+        Plot: {
+            Chapter: 'chapter',
+            Piece: 'piece',
+        },
         Pieces: {
             Content: 1, // 内容
             PlotJump: 2, // 剧情跳转

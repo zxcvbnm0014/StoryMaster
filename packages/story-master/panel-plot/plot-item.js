@@ -20,6 +20,16 @@ Vue.component('plot-item', {
             }.bind(this)
         );
     },
+    computed: {
+        typeIcon() {
+            if (this.data.type === cc.StoryMaster.Type.Plot.Chapter) {
+                return 'packages://story-master/assets/plot-folder.png';
+            } else if (this.data.type === cc.StoryMaster.Type.Plot.Piece) {
+                return 'packages://story-master/assets/plot-piece.png';
+            }
+            return 'packages://story-master/assets/plot-unknown.png';
+        },
+    },
     methods: {
         _foldClass() {
             if (this.data.fold) {

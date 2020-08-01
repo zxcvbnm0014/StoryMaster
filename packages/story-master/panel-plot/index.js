@@ -62,18 +62,19 @@ Editor.Panel.extend({
                     };
                     this._createPlotItemMenu(data, options);
                 },
+
                 _createPlotItemMenu(data, options) {
                     let template = [
                         {
-                            label: '添加平级剧情',
+                            label: '添加章节',
                             click: () => {
-                                this.addSiblingItem(data);
+                                this.addItem(data, cc.StoryMaster.Type.Plot.Chapter);
                             },
                         },
                         {
-                            label: '添加子剧情',
+                            label: '添加剧情',
                             click: () => {
-                                this.addItem(data);
+                                this.addItem(data, cc.StoryMaster.Type.Plot.Piece);
                             },
                         },
                         { type: 'separator' },
@@ -190,71 +191,56 @@ Editor.Panel.extend({
 
                 _findItemByID(data, id) {
                     if (data.id === id) {
-                        return [data];
+                        return data;
                     }
-
                     let children = data.children;
-
                     if (children && children.length > 0) {
                         for (let i = 0; i < children.length; i++) {
                             let item = children[i];
-                            let [ret, father, idx] = this._findItemByID(item, id);
-
+                            let ret = this._findItemByID(item, id);
                             if (ret) {
-                                return [ret, father || data, idx || i];
+                                return ret;
                             }
                         }
                     }
-
-                    return [null];
+                    return null;
                 },
 
-                createNewPlot() {
+                createNewPlot(type) {
                     let pieceID = Editor.Utils.UuidUtils.uuid();
-                    let newPlot = {
+                    let name = '';
+                    if (cc.StoryMaster.Type.Plot.Piece === type) {
+                        name = '剧情';
+                    } else if (cc.StoryMaster.Type.Plot.Chapter === type) {
+                        name = '章节';
+                    }
+                    return {
                         id: Editor.Utils.UuidUtils.uuid(),
+                        type: type || cc.StoryMaster.Type.Plot.Piece,
                         fold: true,
                         root: false,
-                        name: '剧情' + (Math.random() * 100).toFixed(0),
+                        name: name + (Math.random() * 100).toFixed(0),
                         children: [],
                         next: null,
                         piece: pieceID,
                     };
-
-                    return [pieceID, newPlot];
                 },
 
-                addSiblingItem(data) {
-                    let [ret, father, idx] = this._findItemByID(this.plotData, data.id);
-
-                    if (ret && father) {
-                        const [pieceID, newPlot] = this.createNewPlot();
-
-                        father.children.splice(idx + 1, 0, newPlot);
-                        father.fold = false;
-
-                        this._savePlot();
-                        this._addNewPiece(pieceID);
-                    } else {
-                        Editor.log('添加平级剧情失败!');
-                    }
-                },
-
-                addItem(data) {
-                    let [ret] = this._findItemByID(this.plotData, data.id);
-
+                addItem(data, type) {
+                    let ret = this._findItemByID(this.plotData, data.id);
                     if (ret) {
-                        const [pieceID, newPlot] = this.createNewPlot();
-
+                        const newPlot = this.createNewPlot(type);
                         ret.fold = false;
                         ret.children.push(newPlot);
 
-                        // piece相连
                         this._savePlot();
-                        let b = this._addNewPiece(pieceID);
-
+                        let b = this._addNewPiece(newPlot.piece);
                         if (b) {
-                            // Editor.Ipc.sendToPanel("story-master.piece", 'onPieceData', pieceID);
+                            Editor.Ipc.sendToPanel(
+                                'story-master.piece',
+                                'onPieceData',
+                                pieceID
+                            );
                         }
                     }
                 },
@@ -338,7 +324,7 @@ Editor.Panel.extend({
                             }
                         }
                         if (delItem) {
-                            let [ret2] = this._findItemByID(this.plotData, data.id);
+                            let ret2 = this._findItemByID(this.plotData, data.id);
                             ret2.fold = false;
                             ret2.children.push(delItem);
                             this._savePlot();

@@ -5,15 +5,18 @@
 
         <div class="layout horizontal center flex-1 " style="width: 100%;"
              :class="{'plot-item-selected':isSelected}">
-            <!--           icon箭头 -->
+            <!--icon箭头 -->
             <i id="foldIcon" @click="onClickFold" :class="_foldClass()"
                :style="{visibility:data.children.length>0?'visible':'hidden'}"></i>
 
-            <div v-show="!isRename" class="layout horizontal flex-1" @dblclick="onDoubleClickRename">
-                    {{data.name}}
+
+            <img :src="typeIcon" class="plot-type-icon" alt="类型">
+            <div v-show="!isRename" class="layout horizontal flex-1"
+                 @dblclick="onDoubleClickRename" style="height: 100%;">
+                {{data.name}}
             </div>
             <input v-show="isRename" v-el:rename class="flex-1 rename-input"
-                  type="text" autofocus @blur="onChangeName" v-model="data.name">
+                   type="text" autofocus @blur="onChangeName" v-model="data.name">
         </div>
     </div>
 
