@@ -26,6 +26,8 @@ Vue.component('plot-item', {
                 return 'packages://story-master/assets/plot-folder.png';
             } else if (this.data.type === cc.StoryMaster.Type.Plot.Piece) {
                 return 'packages://story-master/assets/plot-piece.png';
+            } else if (this.data.type === 'root') {
+                return 'packages://story-master/assets/plot-root.png';
             }
             return 'packages://story-master/assets/plot-unknown.png';
         },

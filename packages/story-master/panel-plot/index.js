@@ -30,6 +30,7 @@ Editor.Panel.extend({
                     id: Editor.Utils.UuidUtils.uuid(),
                     root: true,
                     fold: false,
+                    type: 'root',
                     name: '我的剧情',
                     children: [],
                 },
