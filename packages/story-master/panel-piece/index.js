@@ -206,14 +206,17 @@ Editor.Panel.extend({
                         }
                     }
                 },
+                _resetPieceView() {
+                    this.plotData = null;
+                    this.pieceID = null;
+                    this.pieceData = [];
+                },
                 setPieceData(data) {
                     Editor.Ipc.sendToMain('story-master:setPieceData', {
                         selectPlot: data,
                     });
-                    if (data.root) {
-                        this.plotData = null;
-                        this.pieceID = null;
-                        this.pieceData = [];
+                    if (data.root || data.type === cc.StoryMaster.Type.Plot.Chapter) {
+                        this._resetPieceView();
                         return;
                     }
 
