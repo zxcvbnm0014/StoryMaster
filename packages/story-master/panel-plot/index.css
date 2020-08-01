@@ -5,16 +5,17 @@
     font-size: 14px;
     width: 25px;
     margin-right: 2px;
-
     cursor: pointer;
     text-align: center;
     visibility: visible;
 }
 
 .plot-item {
-    /*background-color: #467a1b;*/
-    /*padding-top: 4px;*/
-    /*padding-bottom: 4px;*/
+    /* background-color: #467a1b; */
+
+    /* padding-top: 4px; */
+
+    /* padding-bottom: 4px; */
     height: 20px;
     justify-content: center;
     align-items: flex-start;
@@ -26,26 +27,17 @@
 
 .plot-item:hover {
     background-color: rgba(101, 92, 92, 0.73);
-
 }
 
-.began {
-    margin-left: 27px;
+
+.rename-input {
+    border: 1px solid;
+    border-color: blue;
+    font-size: 12px;
+    background-color: transparent;
+    outline: none;
 }
 
-.began:hover {
-    background-color: rgba(101, 92, 92, 0.73);
-}
-
-.end {
-    margin-left: 27px;
-
-}
-.end{
-    background-color: rgba(101, 92, 92, 0.73);
-
-
-}
 
 
 
