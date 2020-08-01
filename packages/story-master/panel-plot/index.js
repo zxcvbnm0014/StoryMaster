@@ -8,6 +8,7 @@ const RightMenu = Editor.require('packages://story-master/core/rightMenu.js');
 const PlotMsg = Editor.require('packages://story-master/panel-plot/msg.js');
 let CutPlotItem = null;
 Editor.require('packages://story-master/panel-plot/plot-item.js');
+
 Editor.Panel.extend({
     style: Core.loadFile('panel-plot/index.css'),
     template: Core.loadFile('panel-plot/index.html'),
@@ -19,7 +20,7 @@ Editor.Panel.extend({
                 let url = Editor.url(StoryMaster.GameCfg.plot.plugin);
                 if (Fs.existsSync(url)) {
                     let data = Fs.readFileSync(url, 'utf-8');
-                    data = JSON.parse(data);
+                    data = this._updatePlotData(JSON.parse(data));
                     this.plotData.children = data;
                 }
                 this.$root.$on(PlotMsg.OnPlotItemRightMenu, this.OnPlotItemRightMenu);
@@ -34,6 +35,43 @@ Editor.Panel.extend({
                 },
             },
             methods: {
+                _getCfgData() {
+                    let url = Editor.url(StoryMaster.GameCfg.plot.plugin);
+                    if (Fs.existsSync(url)) {
+                        return Fs.readFileSync(url, 'utf-8');
+                    }
+                    return null;
+                },
+                _setCfgData(data) {
+                    let url = Editor.url(StoryMaster.GameCfg.plot.plugin);
+                    if (Fs.existsSync(url)) {
+                        Fs.writeFileSync(url, JsonFormat(data), 'utf-8');
+                        Editor.assetdb.refresh(StoryMaster.GameCfg.plot.plugin);
+                    }
+                },
+                _updatePlotData(rootData) {
+                    let bChange = false;
+
+                    function _deepUpdateItem(data) {
+                        for (let i = 0; i < data.length; i++) {
+                            let item = data[i];
+                            if (item.type === undefined) {
+                                item.type = cc.StoryMaster.Type.Plot.Piece;
+                                bChange = true;
+                            }
+                            if (item.children && item.children.length > 0) {
+                                _deepUpdateItem(item.children);
+                            }
+                        }
+                    }
+
+                    _deepUpdateItem(rootData);
+
+                    if (bChange) {
+                        this._setCfgData(rootData);
+                    }
+                    return rootData;
+                },
                 getCutItemID() {
                     let id = null;
                     let parent = null;
@@ -263,12 +301,7 @@ Editor.Panel.extend({
                     }
                 },
                 _savePlot() {
-                    let url = Editor.url(StoryMaster.GameCfg.plot.plugin);
-                    if (Fs.existsSync(url)) {
-                        let data = JsonFormat(this.plotData.children);
-                        Fs.writeFileSync(url, data, 'utf-8');
-                        Editor.assetdb.refresh(StoryMaster.GameCfg.plot.plugin);
-                    }
+                    this._setCfgData(this.plotData.children);
                 },
                 onPlotMenuItemUp(data) {
                     let ret = this._findItemParentById(this.plotData, data.id);

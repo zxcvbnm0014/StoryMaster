@@ -53,26 +53,16 @@ Vue.component('plot-item', {
             this.$root.$emit(Msg.PlotItemSelected, false);
             this.isSelected = true;
             clearTimeout(this.clickTimer);
-            this.clickTimer = setTimeout(
-                function() {
-                    Editor.Ipc.sendToPanel(
-                        'story-master.piece',
-                        'onPieceData',
-                        this.data
-                    );
-                }.bind(this),
-                200
-            );
+            this.clickTimer = setTimeout(() => {
+                Editor.Ipc.sendToPanel('story-master.piece', 'onPieceData', this.data);
+            }, 200);
         },
         onDoubleClickRename() {
             clearTimeout(this.clickTimer);
             this.isRename = true;
-            setTimeout(
-                function() {
-                    this.$els.rename.focus();
-                }.bind(this),
-                10
-            );
+            setTimeout(() => {
+                this.$els.rename.focus();
+            }, 10);
         },
         onChangeName() {
             this.isRename = false;
