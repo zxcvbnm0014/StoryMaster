@@ -144,7 +144,7 @@ module.exports = {
         // 禁止使用特定的语法
         'no-restricted-syntax': 0,
         // 禁止 function 标识符和括号之间出现空格
-        'no-spaced-func': 2,
+        'no-spaced-func': 'always',
         // 不允许使用三元操作符
         'no-ternary': 0,
         // 禁用行尾空格
