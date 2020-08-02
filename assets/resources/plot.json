@@ -1,42 +1,43 @@
 [
 	{
-		"id": "0dTBNLmPJFDZqZu6KtRKUn",
-		"fold": false,
-		"root": false,
-		"name": "开头片段",
-		"children": [
-			{
-				"id": "77dgMpK0BLAqQ/1HUppSeh",
-				"fold": false,
-				"root": false,
-				"name": "选项1剧情-看小猪佩奇",
-				"children": [],
-				"next": null,
-				"piece": "15GO0YCgZCqZGiHuYzqfaQ",
-				"type": "piece"
-			},
-			{
-				"id": "c6qVocohhFcYB/+1DeEvyP",
-				"fold": true,
-				"root": false,
-				"name": "选项2剧情-拜拜",
-				"children": [],
-				"next": null,
-				"piece": "6c86FGKB1ByrR8+u48s2w6",
-				"type": "piece"
-			}
-		],
-		"next": null,
-		"piece": "c8b1WOHQ5EMo2Mp5TVpsvK",
-		"type": "piece"
-	},
-	{
 		"id": "f0NKXqbQpEr4xnAzbtiuC6",
 		"type": "chapter",
 		"fold": false,
 		"root": false,
 		"name": "开头章节",
-		"children": [],
+		"children": [
+			{
+				"id": "0dTBNLmPJFDZqZu6KtRKUn",
+				"fold": false,
+				"root": false,
+				"name": "开头片段",
+				"children": [
+					{
+						"id": "77dgMpK0BLAqQ/1HUppSeh",
+						"fold": false,
+						"root": false,
+						"name": "选项1剧情-看小猪佩奇",
+						"children": [],
+						"next": null,
+						"piece": "15GO0YCgZCqZGiHuYzqfaQ",
+						"type": "piece"
+					},
+					{
+						"id": "c6qVocohhFcYB/+1DeEvyP",
+						"fold": true,
+						"root": false,
+						"name": "选项2剧情-拜拜",
+						"children": [],
+						"next": null,
+						"piece": "6c86FGKB1ByrR8+u48s2w6",
+						"type": "piece"
+					}
+				],
+				"next": null,
+				"piece": "c8b1WOHQ5EMo2Mp5TVpsvK",
+				"type": "piece"
+			}
+		],
 		"next": null,
 		"piece": "b1rz2UbE5P7JSk8WcsLcq6"
 	},
@@ -61,22 +62,23 @@
 		"type": "piece"
 	},
 	{
-		"id": "280SPfcOhDzrKq75ZDSwuB",
-		"fold": false,
-		"root": false,
-		"name": "谢谢观看",
-		"children": [],
-		"next": null,
-		"piece": "66kZA662xKWb+pciQ2GO5w",
-		"type": "piece"
-	},
-	{
 		"id": "f9PDRUc8BAOJW1l8QQ5hdY",
 		"type": "chapter",
 		"fold": false,
 		"root": false,
 		"name": "章节-结束",
-		"children": [],
+		"children": [
+			{
+				"id": "280SPfcOhDzrKq75ZDSwuB",
+				"fold": false,
+				"root": false,
+				"name": "谢谢观看",
+				"children": [],
+				"next": null,
+				"piece": "66kZA662xKWb+pciQ2GO5w",
+				"type": "piece"
+			}
+		],
 		"next": null,
 		"piece": "c4sK0N+rpJ161+z/fnqF4W"
 	},
