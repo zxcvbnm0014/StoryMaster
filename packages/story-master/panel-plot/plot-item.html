@@ -25,7 +25,7 @@
             <img :src="typeIcon" class="plot-type-icon" alt="类型" draggable="false">
             <div v-show="!isRename" class="layout horizontal flex-1 center"
                  @dblclick="onDoubleClickRename" style="height: 100%;">
-                <div>{{data.name}}</div>
+                <div style="white-space: nowrap;text-overflow: ellipsis;">{{data.name}}</div>
             </div>
             <input v-show="isRename" v-el:rename class="flex-1 rename-input"
                    type="text" autofocus @blur="onChangeName" v-model="data.name">
