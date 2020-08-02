@@ -1,6 +1,7 @@
 <div>
     <div class="layout vertical plot-item " :class="dragInsertClass"
          @mouseover="onMouseOver" @mouseout="onMouseOut"
+         @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
          @click="onItemClick"
          @drag="onDrag"
          @dragstart="onDragstart"
@@ -15,7 +16,7 @@
 
         </div>
         <div class="layout horizontal center flex-1 " style="width: 100%;"
-             :class="{'plot-item-selected':isSelected}">
+             :class="itemSelectClass">
             <!--icon箭头 -->
             <i id="foldIcon" @click="onClickFold" :class="_foldClass()"
                :style="{visibility:data.children.length>0?'visible':'hidden'}"></i>

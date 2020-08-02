@@ -11,6 +11,7 @@ Vue.component('plot-item', {
         return {
             isRename: false,
             isSelected: false,
+            isHover: false,
 
             dragInsertType: null,
             isShowTopLine: false,
@@ -51,6 +52,18 @@ Vue.component('plot-item', {
             }
             return null;
         },
+        itemSelectClass() {
+            let ret = '';
+            if (this.isSelected && this.dragInsertType === null) {
+                ret += 'plot-item-selected';
+            }
+            if (this.isHover) {
+                if (!this.isSelected) {
+                    ret += 'plot-item-hover';
+                }
+            }
+            return ret;
+        },
     },
     methods: {
         _foldClass() {
@@ -65,8 +78,18 @@ Vue.component('plot-item', {
             // todo 通知事件
             Editor.Ipc.sendToPanel('story-master.plot', 'onItemFold', this.data);
         },
-        onMouseOver() {},
-        onMouseOut() {},
+        onMouseOver() {
+            // console.log('over');
+        },
+        onMouseOut() {
+            // console.log('out');
+        },
+        onMouseEnter() {
+            this.isHover = true;
+        },
+        onMouseLeave() {
+            this.isHover = false;
+        },
         onDragstart(event) {
             // 非常重要
             event.stopPropagation();
@@ -134,6 +157,7 @@ Vue.component('plot-item', {
         onItemClick() {
             this.$root.$emit(Msg.PlotItemSelected, false);
             this.isSelected = true;
+            this.isHover = false;
             clearTimeout(this.clickTimer);
             this.clickTimer = setTimeout(() => {
                 Editor.Ipc.sendToPanel('story-master.piece', 'onPieceData', this.data);
