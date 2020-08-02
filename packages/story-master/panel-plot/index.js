@@ -212,16 +212,6 @@ Editor.Panel.extend({
                     ];
                     RightMenu.createRightMenu(template);
                 },
-                initCfg() {
-                    Core.initCfg();
-                    // Editor.Ipc.sendToMain('story-master:onPlotItemMenu', event.x, event.y, null);
-                },
-                onAddPlot() {},
-
-                onBtnClick() {
-                    Core.callSceneScript('getStoryPieceInfo', {}, (error, data) => {});
-                },
-                onBlurTalkWord() {},
                 delItem(data) {
                     let result = Editor.Dialog.messageBox({
                         type: 'question',
@@ -427,6 +417,7 @@ Editor.Panel.extend({
 
     messages: {
         onItemFold(event, data) {
+            // 优化为内部消息
             this.plugin._savePlot();
         },
     },
