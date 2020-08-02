@@ -112,10 +112,14 @@ Vue.component('plot-item', {
             console.log('drag');
         },
         onDrop(event) {
-            this.dragInsertType = null;
             let id = event.dataTransfer.getData('text');
-            let type = 1;
-            this.$root.$emit(PlotMsg.OnDragPlotItem, { id: id, type: type });
+            let type = this.dragInsertType;
+            this.$root.$emit(PlotMsg.OnDragPlotItem, {
+                from: id,
+                to: this.data.id,
+                type: type,
+            });
+            this.dragInsertType = null;
         },
         onPlotItemMenu(event) {
             this.$root.$emit(PlotMsg.OnPlotItemRightMenu, this.data);

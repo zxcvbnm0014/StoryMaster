@@ -39,10 +39,13 @@ Editor.Panel.extend({
             methods: {
                 _onDragPlotItem(data) {
                     console.log(data);
-                    let { type, id } = data;
+                    let { type, from, to } = data;
                     if (type === PlotMsg.PlaceType.After) {
+                        // 插入到to的后边
+                        this._insertToAfter(from, to);
                     } else if (type === PlotMsg.PlaceType.Before) {
                     } else if (type === PlotMsg.PlaceType.In) {
+                        let parent = this._findItemParentById(this.plotData, from);
                     }
                 },
                 _getCfgData() {
@@ -210,6 +213,31 @@ Editor.Panel.extend({
                     }
                 },
 
+                _insertToAfter(fromID, toID) {
+                    // 先找到from的parent和位置
+                    let parentData = this._findItemParentById(this.plotData, fromID);
+                    let delItem = this._spliceItemFromParent(parentData, fromID);
+                    let targetParentData = this._findItemParentById(this.plotData, toID);
+                    for (let i = 0; i < targetParentData.children.length; i++) {
+                        let item = targetParentData.children[i];
+                        let nextItem = targetParentData.children[i + 1];
+                        if (nextItem === undefined || nextItem.id === delItem.id) {
+                            targetParentData.children.splice(i + 1, 0, delItem);
+                            break;
+                        }
+                    }
+                },
+                _spliceItemFromParent(parent, id) {
+                    let delItem = null;
+                    for (let i = 0; i < parent.children.length; i++) {
+                        let item = parent.children[i];
+                        if (item.id === id) {
+                            delItem = parent.children.splice(i, 1)[0];
+                            break;
+                        }
+                    }
+                    return delItem;
+                },
                 _findItemParentById(root, id) {
                     let children = root.children;
                     if (children.length === 0) {
@@ -355,17 +383,9 @@ Editor.Panel.extend({
                 },
                 onPlotMenuItemPast(data) {
                     if (CutPlotItem) {
-                        let delItem = null;
                         let ret = this._findItemParentById(this.plotData, CutPlotItem.id);
-
-                        // 将剪切的数据从原来的地方删除了
-                        for (let i = 0; i < ret.children.length; i++) {
-                            let item = ret.children[i];
-                            if (item.id === CutPlotItem.id) {
-                                delItem = ret.children.splice(i, 1)[0];
-                                break;
-                            }
-                        }
+                        // todo 验证下 将剪切的数据从原来的地方删除了
+                        let delItem = this._spliceItemFromParent(ret, CutPlotItem.id);
                         if (delItem) {
                             let ret2 = this._findItemByID(this.plotData, data.id);
                             ret2.fold = false;
