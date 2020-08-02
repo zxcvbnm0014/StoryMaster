@@ -1,7 +1,7 @@
 [
 	{
 		"id": "0dTBNLmPJFDZqZu6KtRKUn",
-		"fold": true,
+		"fold": false,
 		"root": false,
 		"name": "开头片段",
 		"children": [
@@ -12,7 +12,8 @@
 				"name": "选项1剧情-看小猪佩奇",
 				"children": [],
 				"next": null,
-				"piece": "15GO0YCgZCqZGiHuYzqfaQ"
+				"piece": "15GO0YCgZCqZGiHuYzqfaQ",
+				"type": "piece"
 			},
 			{
 				"id": "c6qVocohhFcYB/+1DeEvyP",
@@ -21,29 +22,33 @@
 				"name": "选项2剧情-拜拜",
 				"children": [],
 				"next": null,
-				"piece": "6c86FGKB1ByrR8+u48s2w6"
+				"piece": "6c86FGKB1ByrR8+u48s2w6",
+				"type": "piece"
 			}
 		],
 		"next": null,
-		"piece": "c8b1WOHQ5EMo2Mp5TVpsvK"
+		"piece": "c8b1WOHQ5EMo2Mp5TVpsvK",
+		"type": "piece"
+	},
+	{
+		"id": "f0NKXqbQpEr4xnAzbtiuC6",
+		"type": "chapter",
+		"fold": false,
+		"root": false,
+		"name": "开头章节",
+		"children": [],
+		"next": null,
+		"piece": "b1rz2UbE5P7JSk8WcsLcq6"
 	},
 	{
 		"id": "8ekjOuI2RFA4SbULoCwBpG",
 		"fold": true,
 		"root": false,
-		"name": "剧情3",
+		"name": "空剧情",
 		"children": [],
 		"next": null,
-		"piece": "62K7kq4A1J2IpsGUH8O8jV"
-	},
-	{
-		"id": "c2llyietRHLqtCcF3o9nOa",
-		"fold": true,
-		"root": false,
-		"name": "剧情52",
-		"children": [],
-		"next": null,
-		"piece": "0bFV9DBXtBYI1567QPvKVQ"
+		"piece": "62K7kq4A1J2IpsGUH8O8jV",
+		"type": "piece"
 	},
 	{
 		"id": "b7GXRdyWJHU7b/GTxaP3rJ",
@@ -52,16 +57,28 @@
 		"name": "剧情内容-玩泥巴",
 		"children": [],
 		"next": null,
-		"piece": "8b/FyqXCZJp5Q1Zm3KR/l2"
+		"piece": "8b/FyqXCZJp5Q1Zm3KR/l2",
+		"type": "piece"
 	},
 	{
 		"id": "280SPfcOhDzrKq75ZDSwuB",
-		"fold": true,
+		"fold": false,
 		"root": false,
 		"name": "谢谢观看",
 		"children": [],
 		"next": null,
-		"piece": "66kZA662xKWb+pciQ2GO5w"
+		"piece": "66kZA662xKWb+pciQ2GO5w",
+		"type": "piece"
+	},
+	{
+		"id": "f9PDRUc8BAOJW1l8QQ5hdY",
+		"type": "chapter",
+		"fold": false,
+		"root": false,
+		"name": "章节-结束",
+		"children": [],
+		"next": null,
+		"piece": "c4sK0N+rpJ161+z/fnqF4W"
 	},
 	{
 		"id": "25MpZ8Tn9MP4ESjb+zSbG3",
@@ -70,7 +87,8 @@
 		"name": "剧情73",
 		"children": [],
 		"next": null,
-		"piece": "e2XLETAj5OtaDh3N7XIIeN"
+		"piece": "e2XLETAj5OtaDh3N7XIIeN",
+		"type": "piece"
 	},
 	{
 		"id": "7dgU5RNzRFPZOYcSKwZ656",
@@ -79,6 +97,7 @@
 		"name": "剧情89",
 		"children": [],
 		"next": null,
-		"piece": "70rrqk0VVLgKJbGgW9IXNE"
+		"piece": "70rrqk0VVLgKJbGgW9IXNE",
+		"type": "piece"
 	}
 ]
