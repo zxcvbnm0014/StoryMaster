@@ -64,16 +64,14 @@ Editor.Panel.extend({
                 },
                 _onDragPlotItem(data) {
                     let { type, from, to } = data;
+                    const { Before, After, In } = PlotMsg.PlaceType;
                     if (this._isFatherSonRelationship(from, to)) {
                         console.error('不允许从父节点，拖拽到子节点');
                         return;
                     }
 
                     // 不能拖拽的根节点的前后
-                    if (
-                        type === PlotMsg.PlaceType.Before ||
-            type === PlotMsg.PlaceType.After
-                    ) {
+                    if (type === Before || type === After) {
                         let toData = this._findItemByID(this.plotData, to);
                         if (toData.type === 'root') {
                             console.log('不能调整到根节点的前后');
@@ -81,10 +79,7 @@ Editor.Panel.extend({
                         }
                     }
 
-                    if (
-                        type === PlotMsg.PlaceType.After ||
-            type === PlotMsg.PlaceType.Before
-                    ) {
+                    if (type === After || type === Before) {
                         this._insertTo(from, to, type);
                     } else if (type === PlotMsg.PlaceType.In) {
                         let parent = this._findItemParentById(this.plotData, from);
@@ -93,6 +88,7 @@ Editor.Panel.extend({
                         let targetData = this._findItemByID(this.plotData, to);
                         if (targetData && delItem) {
                             targetData.children.push(delItem);
+                            this._savePlot();
                         } else {
                             console.error('失败');
                         }
@@ -218,10 +214,7 @@ Editor.Panel.extend({
                 onAddPlot() {},
 
                 onBtnClick() {
-                    Core.callSceneScript('getStoryPieceInfo', {}, function(
-                        error,
-                        data
-                    ) {});
+                    Core.callSceneScript('getStoryPieceInfo', {}, (error, data) => {});
                 },
                 onBlurTalkWord() {},
                 delItem(data) {
@@ -272,6 +265,8 @@ Editor.Panel.extend({
                     }
                     if (!bSucceed) {
                         console.error('调整失败');
+                    } else {
+                        this._savePlot();
                     }
                 },
 
