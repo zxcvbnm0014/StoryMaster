@@ -113,25 +113,18 @@ Vue.component('plot-item', {
         onDragover(event) {
             event.preventDefault();
             event.stopPropagation();
-            let id = event.dataTransfer.getData('text');
-            if (this.data.id === id) {
-                event.dataTransfer.dropEffect = 'none';
+            event.dataTransfer.dropEffect = 'move';
+            // console.log(`over ${this.data.name} ${new Date().getTime()}`);
+            let y = event.offsetY;
+            let height = event.currentTarget.offsetHeight;
+            if (2 <= y && y < height / 3) {
+                // console.log('before');
+                this.dragInsertType = PlotMsg.PlaceType.Before;
+            } else if (height / 3 <= y && y < (height / 3) * 2) {
                 this.dragInsertType = PlotMsg.PlaceType.In;
-            } else {
-                event.dataTransfer.dropEffect = 'move';
-                // console.log(`over ${this.data.name} ${new Date().getTime()}`);
-
-                let y = event.offsetY;
-                let height = event.currentTarget.offsetHeight;
-                if (2 <= y && y < height / 3) {
-                    // console.log('before');
-                    this.dragInsertType = PlotMsg.PlaceType.Before;
-                } else if (height / 3 <= y && y < (height / 3) * 2) {
-                    this.dragInsertType = PlotMsg.PlaceType.In;
-                } else if ((height / 3) * 2 <= y - 2) {
-                    this.dragInsertType = PlotMsg.PlaceType.After;
-                    // console.log('after');
-                }
+            } else if ((height / 3) * 2 <= y - 2) {
+                this.dragInsertType = PlotMsg.PlaceType.After;
+                // console.log('after');
             }
         },
 
