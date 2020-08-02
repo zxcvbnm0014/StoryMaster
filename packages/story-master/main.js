@@ -34,7 +34,7 @@ module.exports = {
         Editor.Ipc.sendToPanel(
             'story-master.piece',
             'getCurrentEditorPiecePrefab',
-            function(id) {
+            id => {
                 if (id) {
                     let StoryMaster = Editor.require(
                         'packages://story-master/code/StoryMaster.js'
@@ -50,7 +50,7 @@ module.exports = {
                         cb && cb();
                     }
                 }
-            }.bind(this)
+            }
         );
     },
     getSceneUUID(sceneName) {
@@ -78,7 +78,6 @@ module.exports = {
     pieceData: {},
     messages: {
         getPieceData(event, data) {
-            Editor.log('选择的画布' + JSON.stringify(this.pieceData));
             event.reply && event.reply(this.pieceData);
         },
         setPieceData(event, data) {
@@ -128,12 +127,10 @@ module.exports = {
                 this._saveStartScene('StoryStart');
                 this._refreshBrowser();
             } else if (platform === PkgPreview.unit) {
-                this._saveInitCfgUnit(
-                    function() {
-                        this._saveStartScene('StoryTest');
-                        this._refreshBrowser();
-                    }.bind(this)
-                );
+                this._saveInitCfgUnit(() => {
+                    this._saveStartScene('StoryTest');
+                    this._refreshBrowser();
+                });
             } else if (platform === PkgPreview.story) {
                 this._saveStartScene('StoryGame');
                 this._refreshBrowser();
@@ -148,12 +145,10 @@ module.exports = {
                 this._openBrowser();
             } else if (platform === PkgPreview.unit) {
                 // 单元测试
-                this._saveInitCfgUnit(
-                    function() {
-                        this._saveStartScene('StoryTest');
-                        this._openBrowser();
-                    }.bind(this)
-                );
+                this._saveInitCfgUnit(() => {
+                    this._saveStartScene('StoryTest');
+                    this._openBrowser();
+                });
             } else if (platform === PkgPreview.story) {
                 // 故事预览
                 this._saveStartScene('StoryGame');
