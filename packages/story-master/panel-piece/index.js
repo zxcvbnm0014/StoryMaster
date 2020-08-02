@@ -125,28 +125,6 @@ Editor.Panel.extend({
                         },
                         { type: 'separator' },
                         {
-                            label: '上移',
-                            enabled: options && options.up,
-                            click: () => {
-                                this.onPieceMenuItemUp(data);
-                            },
-                        },
-                        {
-                            label: '下移',
-                            enabled: options && options.down,
-                            click: () => {
-                                this.onPieceMenuItemDown(data);
-                            },
-                        },
-                        {
-                            label: '下移到末尾',
-                            enabled: options && options.down,
-                            click: () => {
-                                this.onPieceMenuItemDownEnd(data);
-                            },
-                        },
-                        { type: 'separator' },
-                        {
                             label: '剪切',
                             enabled: options && options.cut,
                             click: () => {
@@ -494,50 +472,6 @@ Editor.Panel.extend({
                             CutPieceItem = null;
                         }
                         bCutOrCopy = Op.None;
-                    }
-                },
-                onPieceMenuItemUp(data) {
-                    for (let i = 0; i < this.pieceData.length; i++) {
-                        let item = this.pieceData[i];
-                        if (item.id === data.id) {
-                            if (i === 0) {
-                                return;
-                            }
-                            let delItem = this.pieceData.splice(i, 1)[0];
-                            this.pieceData.splice(i - 1, 0, delItem);
-                            this._savePiece(true);
-                            break;
-                        }
-                    }
-                },
-                onPieceMenuItemDown(data) {
-                    for (let i = 0; i < this.pieceData.length; i++) {
-                        let item = this.pieceData[i];
-                        if (item.id === data.id) {
-                            if (i === this.pieceData.length - 1) {
-                                return;
-                            }
-
-                            let delItem = this.pieceData.splice(i, 1)[0];
-                            this.pieceData.splice(i + 1, 0, delItem);
-                            this._savePiece(true);
-                            break;
-                        }
-                    }
-                },
-                onPieceMenuItemDownEnd(data) {
-                    for (let i = 0; i < this.pieceData.length; i++) {
-                        let item = this.pieceData[i];
-                        if (item.id === data.id) {
-                            if (i === this.pieceData.length - 1) {
-                                return;
-                            }
-
-                            let delItem = this.pieceData.splice(i, 1)[0];
-                            this.pieceData.push(delItem);
-                            this._savePiece(true);
-                            break;
-                        }
                     }
                 },
 
