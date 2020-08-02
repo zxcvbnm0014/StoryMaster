@@ -72,6 +72,10 @@ Vue.component('plot-item', {
             event.stopPropagation();
             event.dataTransfer.effectAllowed = 'move';
             event.dataTransfer.setData('text', this.data.id);
+
+            // let width = event.target.offsetWidth;
+            // let height = event.target.offsetHeight;
+            // event.dataTransfer.setDragImage(event.target, 0, 0);
         },
         onDragenter() {
             enterTemVar = this.data;
@@ -92,34 +96,36 @@ Vue.component('plot-item', {
                 this.dragInsertType = PlotMsg.PlaceType.In;
             } else {
                 event.dataTransfer.dropEffect = 'move';
-                console.log(`over ${this.data.name} ${new Date().getTime()}`);
+                // console.log(`over ${this.data.name} ${new Date().getTime()}`);
 
                 let y = event.offsetY;
                 let height = event.currentTarget.offsetHeight;
                 if (2 <= y && y < height / 3) {
-                    console.log('before');
+                    // console.log('before');
                     this.dragInsertType = PlotMsg.PlaceType.Before;
                 } else if (height / 3 <= y && y < (height / 3) * 2) {
                     this.dragInsertType = PlotMsg.PlaceType.In;
                 } else if ((height / 3) * 2 <= y - 2) {
                     this.dragInsertType = PlotMsg.PlaceType.After;
-                    console.log('after');
+                    // console.log('after');
                 }
             }
         },
 
         onDrag(event) {
-            console.log('drag');
+            // console.log('drag');
         },
         onDrop(event) {
-            let id = event.dataTransfer.getData('text');
             let type = this.dragInsertType;
-            this.$root.$emit(PlotMsg.OnDragPlotItem, {
-                from: id,
-                to: this.data.id,
-                type: type,
-            });
+            let id = event.dataTransfer.getData('text');
             this.dragInsertType = null;
+            if (id !== this.data.id) {
+                this.$root.$emit(PlotMsg.OnDragPlotItem, {
+                    from: id,
+                    to: this.data.id,
+                    type: type,
+                });
+            }
         },
         onPlotItemMenu(event) {
             this.$root.$emit(PlotMsg.OnPlotItemRightMenu, this.data);

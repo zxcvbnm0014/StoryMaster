@@ -21,7 +21,7 @@
                :style="{visibility:data.children.length>0?'visible':'hidden'}"></i>
 
 
-            <img :src="typeIcon" class="plot-type-icon" alt="类型">
+            <img :src="typeIcon" class="plot-type-icon" alt="类型" draggable="false">
             <div v-show="!isRename" class="layout horizontal flex-1 center"
                  @dblclick="onDoubleClickRename" style="height: 100%;">
                 <div>{{data.name}}</div>

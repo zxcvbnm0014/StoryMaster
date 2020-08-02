@@ -37,16 +37,65 @@ Editor.Panel.extend({
                 },
             },
             methods: {
+                // 是否为父子关系
+                _isFatherSonRelationship(parent, son) {
+                    let data = this._findItemByID(this.plotData, parent);
+                    if (data) {
+                        let ret = false;
+
+                        function adjust(item) {
+                            for (let i = 0; i < item.children.length; i++) {
+                                let value = item.children[i];
+                                if (value.id === son) {
+                                    ret = true;
+                                    return true;
+                                } else {
+                                    if (adjust(value)) {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        adjust(data);
+                        return ret;
+                    }
+                    return false;
+                },
                 _onDragPlotItem(data) {
-                    console.log(data);
                     let { type, from, to } = data;
-                    if (type === PlotMsg.PlaceType.After) {
-                        // 插入到to的后边
-                        this._insertToAfter(from, to);
-                    } else if (type === PlotMsg.PlaceType.Before) {
-                        this._insertToBefore(from, to);
+                    if (this._isFatherSonRelationship(from, to)) {
+                        console.error('不允许从父节点，拖拽到子节点');
+                        return;
+                    }
+
+                    // 不能拖拽的根节点的前后
+                    if (
+                        type === PlotMsg.PlaceType.Before ||
+            type === PlotMsg.PlaceType.After
+                    ) {
+                        let toData = this._findItemByID(this.plotData, to);
+                        if (toData.type === 'root') {
+                            console.log('不能调整到根节点的前后');
+                            return;
+                        }
+                    }
+
+                    if (
+                        type === PlotMsg.PlaceType.After ||
+            type === PlotMsg.PlaceType.Before
+                    ) {
+                        this._insertTo(from, to, type);
                     } else if (type === PlotMsg.PlaceType.In) {
                         let parent = this._findItemParentById(this.plotData, from);
+                        let delItem = this._spliceItemFromParent(parent, from);
+
+                        let targetData = this._findItemByID(this.plotData, to);
+                        if (targetData && delItem) {
+                            targetData.children.push(delItem);
+                        } else {
+                            console.error('失败');
+                        }
                     }
                 },
                 _getCfgData() {
@@ -130,19 +179,6 @@ Editor.Panel.extend({
                             },
                         },
                         { type: 'separator' },
-                        {
-                            label: '上移',
-                            click: () => {
-                                this.onPlotMenuItemUp(data);
-                            },
-                        },
-                        {
-                            label: '下移',
-                            click: () => {
-                                this.onPlotMenuItemDown(data);
-                            },
-                        },
-                        { type: 'separator' },
                         // {
                         //     label: '复制',
                         //     click: () => {
@@ -214,7 +250,8 @@ Editor.Panel.extend({
                     }
                 },
 
-                _insertToAfter(fromID, toID) {
+                _insertTo(fromID, toID, type) {
+                    let bSucceed = false;
                     let parentData = this._findItemParentById(this.plotData, fromID);
                     let delItem = this._spliceItemFromParent(parentData, fromID);
                     let targetParentData = this._findItemParentById(this.plotData, toID);
@@ -222,28 +259,22 @@ Editor.Panel.extend({
                         for (let i = 0; i < targetParentData.children.length; i++) {
                             let item = targetParentData.children[i];
                             if (item.id === toID) {
-                                targetParentData.children.splice(i + 1, 0, delItem);
-                                break;
-                            }
-                        }
-                    }
-                },
-                _insertToBefore(fromID, toID) {
-                    let parentData = this._findItemParentById(this.plotData, fromID);
-                    let targetParentData = this._findItemParentById(this.plotData, toID);
-                    if (targetParentData) {
-                        for (let i = 0; i < targetParentData.children.length; i++) {
-                            let item = targetParentData.children[i];
-                            if (item.id === toID) {
-                                let delItem = this._spliceItemFromParent(parentData, fromID);
-                                if (delItem) {
-                                    targetParentData.children.splice(i - 1, 0, delItem);
+                                if (type === PlotMsg.PlaceType.After) {
+                                    bSucceed = true;
+                                    targetParentData.children.splice(i + 1, 0, delItem);
+                                } else if (type === PlotMsg.PlaceType.Before) {
+                                    bSucceed = true;
+                                    targetParentData.children.splice(i, 0, delItem);
                                 }
                                 break;
                             }
                         }
                     }
+                    if (!bSucceed) {
+                        console.error('调整失败');
+                    }
                 },
+
                 _spliceItemFromParent(parent, id) {
                     let delItem = null;
                     for (let i = 0; i < parent.children.length; i++) {
@@ -357,40 +388,6 @@ Editor.Panel.extend({
                 },
                 _savePlot() {
                     this._setCfgData(this.plotData.children);
-                },
-                onPlotMenuItemUp(data) {
-                    let ret = this._findItemParentById(this.plotData, data.id);
-                    if (ret) {
-                        for (let i = 0; i < ret.children.length; i++) {
-                            let item = ret.children[i];
-                            if (item.id === data.id) {
-                                if (i === 0) {
-                                    return;
-                                }
-                                let delItem = ret.children.splice(i, 1);
-                                ret.children.splice(i - 1, 0, delItem[0]);
-                                this._savePlot();
-                                break;
-                            }
-                        }
-                    }
-                },
-                onPlotMenuItemDown(data) {
-                    let ret = this._findItemParentById(this.plotData, data.id);
-                    if (ret) {
-                        for (let i = 0; i < ret.children.length; i++) {
-                            let item = ret.children[i];
-                            if (item.id === data.id) {
-                                if (i === ret.children.length - 1) {
-                                    return;
-                                }
-                                let delItem = ret.children.splice(i, 1);
-                                ret.children.splice(i + 1, 0, delItem[0]);
-                                this._savePlot();
-                                break;
-                            }
-                        }
-                    }
                 },
                 onPlotMenuItemCopy(data) {
                     CutPlotItem = data;
