@@ -24,6 +24,7 @@ Editor.Panel.extend({
                     this.plotData.children = data;
                 }
                 this.$root.$on(PlotMsg.OnPlotItemRightMenu, this.OnPlotItemRightMenu);
+                this.$root.$on(PlotMsg.OnDragPlotItem, this._onDragPlotItem);
             },
             data: {
                 plotData: {
@@ -36,6 +37,14 @@ Editor.Panel.extend({
                 },
             },
             methods: {
+                _onDragPlotItem(data) {
+                    console.log(data);
+                    let { type, id } = data;
+                    if (type === PlotMsg.PlaceType.After) {
+                    } else if (type === PlotMsg.PlaceType.Before) {
+                    } else if (type === PlotMsg.PlaceType.In) {
+                    }
+                },
                 _getCfgData() {
                     let url = Editor.url(StoryMaster.GameCfg.plot.plugin);
                     if (Fs.existsSync(url)) {

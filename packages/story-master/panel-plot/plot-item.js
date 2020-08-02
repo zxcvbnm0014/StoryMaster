@@ -2,6 +2,8 @@ let Core = Editor.require('packages://story-master/core/core.js');
 const Msg = Editor.require('packages://story-master/core/msg.js');
 const PlotMsg = Editor.require('packages://story-master/panel-plot/msg.js');
 
+let enterTemVar = null;
+
 Vue.component('plot-item', {
     props: ['data'],
     template: Core.loadFile('panel-plot/plot-item.html'),
@@ -9,16 +11,17 @@ Vue.component('plot-item', {
         return {
             isRename: false,
             isSelected: false,
+
+            dragInsertType: null,
+            isShowTopLine: false,
+            isShowBottomLine: false,
         };
     },
     directives: {},
     created() {
-        this.$root.$on(
-            Msg.PlotItemSelected,
-            function(event, data) {
-                this.isSelected = false;
-            }.bind(this)
-        );
+        this.$root.$on(Msg.PlotItemSelected, (event, data) => {
+            this.isSelected = false;
+        });
     },
     computed: {
         typeIcon() {
@@ -30,6 +33,23 @@ Vue.component('plot-item', {
                 return 'packages://story-master/assets/plot-root.png';
             }
             return 'packages://story-master/assets/plot-unknown.png';
+        },
+        canDrag() {
+            return this.data.type !== 'root';
+        },
+        dragInsertClass() {
+            let type = this.dragInsertType;
+            this.isShowBottomLine = this.isShowTopLine = false;
+            if (type === PlotMsg.PlaceType.In) {
+                return 'insertIn';
+            } else if (type === PlotMsg.PlaceType.Before) {
+                this.isShowTopLine = true;
+                return null;
+            } else if (type === PlotMsg.PlaceType.After) {
+                this.isShowBottomLine = true;
+                return null;
+            }
+            return null;
         },
     },
     methods: {
@@ -47,6 +67,56 @@ Vue.component('plot-item', {
         },
         onMouseOver() {},
         onMouseOut() {},
+        onDragstart(event) {
+            // 非常重要
+            event.stopPropagation();
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text', this.data.id);
+        },
+        onDragenter() {
+            enterTemVar = this.data;
+        },
+        onDragleave(event) {
+            // 在拖拽到子元素上时，会触发主元素的leave，所以这里多做了一层处理
+            if (this.data === enterTemVar) {
+                return;
+            }
+            this.dragInsertType = null;
+        },
+        onDragover(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            let id = event.dataTransfer.getData('text');
+            if (this.data.id === id) {
+                event.dataTransfer.dropEffect = 'none';
+                this.dragInsertType = PlotMsg.PlaceType.In;
+            } else {
+                event.dataTransfer.dropEffect = 'move';
+                console.log(`over ${this.data.name} ${new Date().getTime()}`);
+
+                let y = event.offsetY;
+                let height = event.currentTarget.offsetHeight;
+                if (2 <= y && y < height / 3) {
+                    console.log('before');
+                    this.dragInsertType = PlotMsg.PlaceType.Before;
+                } else if (height / 3 <= y && y < (height / 3) * 2) {
+                    this.dragInsertType = PlotMsg.PlaceType.In;
+                } else if ((height / 3) * 2 <= y - 2) {
+                    this.dragInsertType = PlotMsg.PlaceType.After;
+                    console.log('after');
+                }
+            }
+        },
+
+        onDrag(event) {
+            console.log('drag');
+        },
+        onDrop(event) {
+            this.dragInsertType = null;
+            let id = event.dataTransfer.getData('text');
+            let type = 1;
+            this.$root.$emit(PlotMsg.OnDragPlotItem, { id: id, type: type });
+        },
         onPlotItemMenu(event) {
             this.$root.$emit(PlotMsg.OnPlotItemRightMenu, this.data);
         },

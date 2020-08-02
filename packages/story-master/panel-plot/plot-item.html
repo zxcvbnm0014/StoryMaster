@@ -1,8 +1,19 @@
 <div>
-    <div class="layout vertical plot-item " @mouseover="onMouseOver"
-         @mouseout="onMouseOut" @click="onItemClick"
+    <div class="layout vertical plot-item " :class="dragInsertClass"
+         @mouseover="onMouseOver" @mouseout="onMouseOut"
+         @click="onItemClick"
+         @drag="onDrag"
+         @dragstart="onDragstart"
+         @dragenter="onDragenter"
+         @dragover="onDragover"
+         @dragleave="onDragleave"
+         @drop="onDrop"
+         :draggable="canDrag"
          @contextmenu="onPlotItemMenu">
 
+        <div v-show="isShowTopLine" class="insertLine" style="margin-bottom: -2px">
+
+        </div>
         <div class="layout horizontal center flex-1 " style="width: 100%;"
              :class="{'plot-item-selected':isSelected}">
             <!--icon箭头 -->
@@ -11,12 +22,15 @@
 
 
             <img :src="typeIcon" class="plot-type-icon" alt="类型">
-            <div v-show="!isRename" class="layout horizontal flex-1"
+            <div v-show="!isRename" class="layout horizontal flex-1 center"
                  @dblclick="onDoubleClickRename" style="height: 100%;">
-                {{data.name}}
+                <div>{{data.name}}</div>
             </div>
             <input v-show="isRename" v-el:rename class="flex-1 rename-input"
                    type="text" autofocus @blur="onChangeName" v-model="data.name">
+        </div>
+        <div class="insertLine" v-show="isShowBottomLine" style="margin-top: -2px">
+
         </div>
     </div>
 
