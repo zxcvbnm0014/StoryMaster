@@ -142,7 +142,8 @@ Vue.component('plot-item', {
             let type = this.dragInsertType;
             let id = event.dataTransfer.getData('text');
             this.dragInsertType = null;
-            if (id !== this.data.id) {
+            // 防止乱拖拽
+            if (id && id !== '' && id !== this.data.id) {
                 this.$root.$emit(PlotMsg.OnDragPlotItem, {
                     from: id,
                     to: this.data.id,
