@@ -54,8 +54,8 @@ module.exports = {
         );
     },
     getSceneUUID(sceneName) {
-        return new Promise(function(resolve, reject) {
-            Editor.assetdb.queryAssets(null, 'scene', function(err, scenes) {
+        return new Promise((resolve, reject) => {
+            Editor.assetdb.queryAssets(null, 'scene', (err, scenes) => {
                 if (err) {
                     reject(err);
                     return null;
@@ -78,6 +78,7 @@ module.exports = {
     pieceData: {},
     messages: {
         getPieceData(event, data) {
+            Editor.log('选择的画布' + JSON.stringify(this.pieceData));
             event.reply && event.reply(this.pieceData);
         },
         setPieceData(event, data) {
