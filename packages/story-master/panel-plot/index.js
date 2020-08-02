@@ -7,6 +7,7 @@ const JsonFormat = Editor.require(
 const RightMenu = Editor.require('packages://story-master/core/rightMenu.js');
 const PlotMsg = Editor.require('packages://story-master/panel-plot/msg.js');
 let CutPlotItem = null;
+const Utils = Editor.require('packages://story-master/core/util.js');
 Editor.require('packages://story-master/panel-plot/plot-item.js');
 
 Editor.Panel.extend({
@@ -325,7 +326,7 @@ Editor.Panel.extend({
                     return null;
                 },
 
-                createNewPlot(type) {
+                createNewPlot(type, index) {
                     let pieceID = Editor.Utils.UuidUtils.uuid();
                     let name = '';
                     if (cc.StoryMaster.Type.Plot.Piece === type) {
@@ -333,12 +334,15 @@ Editor.Panel.extend({
                     } else if (cc.StoryMaster.Type.Plot.Chapter === type) {
                         name = '章节';
                     }
+                    if (index === undefined) {
+                        index = (Math.random() * 100).toFixed(0);
+                    }
                     return {
                         id: Editor.Utils.UuidUtils.uuid(),
                         type: type || cc.StoryMaster.Type.Plot.Piece,
                         fold: true,
                         root: false,
-                        name: name + (Math.random() * 100).toFixed(0),
+                        name: name + index,
                         children: [],
                         next: null,
                         piece: pieceID,
@@ -348,7 +352,12 @@ Editor.Panel.extend({
                 addItem(data, type) {
                     let ret = this._findItemByID(this.plotData, data.id);
                     if (ret) {
-                        const newPlot = this.createNewPlot(type);
+                        let names = [];
+                        ret.children.forEach(item => {
+                            names.push(item.name);
+                        });
+                        let index = Utils.calcNextIndex(names);
+                        const newPlot = this.createNewPlot(type, index);
                         ret.fold = false;
                         ret.children.push(newPlot);
 

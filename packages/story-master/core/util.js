@@ -3,6 +3,39 @@ let Fs = require('fire-fs');
 let Path = require('fire-path');
 
 module.exports = {
+    calcNextIndex(array) {
+    // 过滤出数组中的所有数字,并转化为数字
+        array = array.map(function(item) {
+            let num = item.toString().replace(/[^0-9]/gi, '');
+            return parseInt(num);
+        });
+        // 过滤重复值
+        array = array.filter(function(item, index, self) {
+            return self.indexOf(item) === index;
+        });
+        // 排序
+        array.sort(function(a, b) {
+            return a - b;
+        });
+        // 去掉为0的开头
+        let began = array[0];
+        if (began !== undefined && began === 0) {
+            array.splice(0, 1);
+        }
+
+        // 找出空缺的值
+        let ret = 1;
+        for (let index = 0; index < array.length; ) {
+            if (array[index] !== ret) {
+                break;
+            } else {
+                ret++;
+                index++;
+            }
+        }
+        // 将返回值补充为2位
+        return ret;
+    },
     serializePlot(root) {
         let array = [];
         for (let i = 0; i < root.length; i++) {
