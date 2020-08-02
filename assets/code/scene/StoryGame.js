@@ -1,20 +1,20 @@
-let GameUtil = require("GameUtil");
-let StoryData = require("StoryData");
-let StoryAudioMgr = require("StoryAudioMgr");
+let GameUtil = require('GameUtil');
+let StoryData = require('StoryData');
+let StoryAudioMgr = require('StoryAudioMgr');
 
 
 cc.Class({
-    extends: require("Observer"),
+    extends: require('Observer'),
 
     properties: {
-        storyNode: {default: null, displayName: "故事节点", type: cc.Node},
-        touchNode: {default: null, displayName: "触摸节点", type: cc.Node},
-        touchEffect: {default: null, displayName: "点击特效", type: cc.Prefab},
+        storyNode: {default: null, displayName: '故事节点', type: cc.Node},
+        touchNode: {default: null, displayName: '触摸节点', type: cc.Node},
+        touchEffect: {default: null, displayName: '点击特效', type: cc.Prefab},
         isTest: false,
 
-        _piece: null,// 当前正在播放的页面{}
-        _pieceData: null,// 当前所有的页面[]
-        _plotData: null,// 当前所在的剧情[]
+        _piece: null, // 当前正在播放的页面{}
+        _pieceData: null, // 当前所有的页面[]
+        _plotData: null, // 当前所在的剧情[]
         _clickeffect: null,
     },
 
@@ -148,7 +148,7 @@ cc.Class({
                 }
             }
         } else {
-            this._onPieceTips("未发现要测试的故事");
+            this._onPieceTips('未发现要测试的故事');
         }
     },
 
@@ -206,7 +206,7 @@ cc.Class({
                     }
                 }.bind(this));
             } else {
-                console.log("piece 数据无效")
+                console.log('piece 数据无效');
             }
         } else if (pieceData && pieceData.type === cc.StoryMaster.Type.Pieces.PlotJump) {
             // todo 判断jump的有效性
@@ -218,7 +218,7 @@ cc.Class({
                 // 无效的jump不会被打断,会继续执行接下来的逻辑
             }
         } else {
-            console.log(`未知的piece`);
+            console.log('未知的piece');
         }
     },
     start() {
