@@ -44,6 +44,7 @@ Editor.Panel.extend({
                         // 插入到to的后边
                         this._insertToAfter(from, to);
                     } else if (type === PlotMsg.PlaceType.Before) {
+                        this._insertToBefore(from, to);
                     } else if (type === PlotMsg.PlaceType.In) {
                         let parent = this._findItemParentById(this.plotData, from);
                     }
@@ -214,16 +215,32 @@ Editor.Panel.extend({
                 },
 
                 _insertToAfter(fromID, toID) {
-                    // 先找到from的parent和位置
                     let parentData = this._findItemParentById(this.plotData, fromID);
                     let delItem = this._spliceItemFromParent(parentData, fromID);
                     let targetParentData = this._findItemParentById(this.plotData, toID);
-                    for (let i = 0; i < targetParentData.children.length; i++) {
-                        let item = targetParentData.children[i];
-                        let nextItem = targetParentData.children[i + 1];
-                        if (nextItem === undefined || nextItem.id === delItem.id) {
-                            targetParentData.children.splice(i + 1, 0, delItem);
-                            break;
+                    if (delItem && targetParentData) {
+                        for (let i = 0; i < targetParentData.children.length; i++) {
+                            let item = targetParentData.children[i];
+                            if (item.id === toID) {
+                                targetParentData.children.splice(i + 1, 0, delItem);
+                                break;
+                            }
+                        }
+                    }
+                },
+                _insertToBefore(fromID, toID) {
+                    let parentData = this._findItemParentById(this.plotData, fromID);
+                    let targetParentData = this._findItemParentById(this.plotData, toID);
+                    if (targetParentData) {
+                        for (let i = 0; i < targetParentData.children.length; i++) {
+                            let item = targetParentData.children[i];
+                            if (item.id === toID) {
+                                let delItem = this._spliceItemFromParent(parentData, fromID);
+                                if (delItem) {
+                                    targetParentData.children.splice(i - 1, 0, delItem);
+                                }
+                                break;
+                            }
                         }
                     }
                 },
