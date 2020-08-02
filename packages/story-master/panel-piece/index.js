@@ -112,13 +112,7 @@ Editor.Panel.extend({
                 onPieceItemMenu(data, options) {
                     let template = [
                         {
-                            label: '插入模版片段(前边)',
-                            click: () => {
-                                this.onInsertItemBefore(data);
-                            },
-                        },
-                        {
-                            label: '插入模版片段(后边)',
+                            label: '插入模版',
                             click: () => {
                                 this.onInsertItemAfter(data);
                             },
@@ -263,25 +257,6 @@ Editor.Panel.extend({
                             console.log(`未发现${id}的数据`);
                         }
                     }
-                },
-                onInsertItemBefore(data) {
-                    (async () => {
-                        let id = data.id;
-                        for (let i = 0; i < this.pieceData.length; i++) {
-                            let item = this.pieceData[i];
-                            if (item.id === id) {
-                                let insert = await this._genNewPiece();
-                                if (insert) {
-                                    this.pieceData.splice(i, 0, insert);
-                                    this._openPrefab(insert.id);
-                                    this._savePiece();
-                                    return;
-                                } else {
-                                }
-                            }
-                        }
-                        Editor.error('插入片段失败!');
-                    })();
                 },
                 onInsertItemAfter(data) {
                     (async () => {
