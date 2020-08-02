@@ -105,8 +105,12 @@ Editor.Panel.extend({
                 _setCfgData(data) {
                     let url = Editor.url(StoryMaster.GameCfg.plot.plugin);
                     if (Fs.existsSync(url)) {
-                        Fs.writeFileSync(url, JsonFormat(data), 'utf-8');
-                        Editor.assetdb.refresh(StoryMaster.GameCfg.plot.plugin);
+                        let formatData = JsonFormat(data);
+                        let originData = this._getCfgData();
+                        if (originData !== formatData) {
+                            Fs.writeFileSync(url, formatData, 'utf-8');
+                            Editor.assetdb.refresh(StoryMaster.GameCfg.plot.plugin);
+                        }
                     }
                 },
                 _updatePlotData(rootData) {
