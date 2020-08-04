@@ -34,7 +34,7 @@ cc.Class({
             let pieceItemInfo = StoryPreload.getNextPiece(this._plotData, data);
             if (pieceItemInfo) {
                 let pieceItem = pieceItemInfo.next;
-                this._pieceData = pieceItemInfo.piece;
+                this._pieceData = pieceItemInfo.pieces;
                 this._plotData = pieceItemInfo.plot;
                 this.createPiece(pieceItem);
             } else {
@@ -196,7 +196,8 @@ cc.Class({
         if (script) {
             script.pieceItem = pieceData;
         }
-        require('StoryPreload').preloadNextPiece(pieceData);
+        const StoryPreload = require('StoryPreload');
+        StoryPreload.preloadNextPiece(this._plotData, pieceData);
     },
 
     createPiece (pieceData) {

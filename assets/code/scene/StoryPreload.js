@@ -6,7 +6,7 @@ module.exports = {
         if (nextPlotData) {
             let piece = StoryData.getPieceDataByID(nextPlotData.piece);
             if (piece && piece.length > 0) {
-                return { next: piece[0], piece: piece, plot: nextPlotData };
+                return { next: piece[0], pieces: piece, plot: nextPlotData };
             } else {
                 // TODO 剧情的画布数量为0,寻找下个剧情
                 return this._getNextPlot(nextPlotData);
@@ -21,7 +21,8 @@ module.exports = {
         let pieceItem = StoryData.getNextPieceItemByKeyAndPrefab(plotData.piece, pieceData.id);
         if (pieceItem) {
             // 找到剧情的下个piece
-            return { next: pieceItem, piece: pieceData, plot: plotData };
+            let pieces = StoryData.getPieceDataByID(plotData.piece);
+            return { next: pieceItem, pieces: pieces, plot: plotData };
         } else {
             // 到达该剧情的尾部，如果没有跳转，寻找下个剧情
             // TODO 对跳转类型的判断

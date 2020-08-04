@@ -16,18 +16,22 @@ cc.Class({
     },
     _getMsgList () {
         return [
-            cc.StoryMaster.Msg.PieceShowOptions,
-            cc.StoryMaster.Msg.OnPieceTalkOver,
             cc.StoryMaster.Msg.UserTouch,
         ];
     },
-    _onMsg (msg, data) {
-        if (msg === cc.StoryMaster.Msg.PieceShowOptions) {
+    _getLocalMsg () {
+        let msg = {};
+        msg[cc.StoryMaster.Msg.OnPieceTalkOver] = () => {
+            cc.ObserverMgr.dispatchMsg(cc.StoryMaster.Msg.OnGoNextPiece, this.pieceItem);
+        };
+        msg[cc.StoryMaster.Msg.PieceShowOptions] = () => {
             cc.ObserverMgr.dispatchMsg(cc.StoryMaster.Msg.OnEnableGlobalTouch, false);
             this._menuNode.active = true;
-        } else if (msg === cc.StoryMaster.Msg.OnPieceTalkOver) {
-            cc.ObserverMgr.dispatchMsg(cc.StoryMaster.Msg.OnGoNextPiece, this.pieceItem);
-        } else if (msg === cc.StoryMaster.Msg.UserTouch) {
+        };
+        return msg;
+    },
+    _onMsg (msg, data) {
+        if (msg === cc.StoryMaster.Msg.UserTouch) {
             if (this._storyTalk) {
                 this._storyTalk.onUserTouch();
             } else {
@@ -51,6 +55,7 @@ cc.Class({
 
             let talk = item.getComponent('StoryTalk');
             if (this._storyTalk === null && talk) {
+                talk.setPiece(this);
                 this._storyTalk = talk;
             }
         }

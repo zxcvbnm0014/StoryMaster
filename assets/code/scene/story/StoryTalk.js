@@ -77,6 +77,9 @@ cc.Class({
         }
 
     },
+    setPiece (piece) {
+        this.piece = piece;
+    },
     onUserTouch () {
         if (this.state === TalkState.Running) {
             // this.onTalkOver();
@@ -88,9 +91,10 @@ cc.Class({
                 // 说完了,如果有用户选择,不予理会
 
             } else {
-                cc.ObserverMgr.dispatchMsg(cc.StoryMaster.Msg.OnPieceTalkOver, null);
+                if (this.piece) {
+                    this.piece.node.emit(cc.StoryMaster.Msg.OnPieceTalkOver);
+                }
             }
-
         }
     },
     start () {
@@ -131,7 +135,9 @@ cc.Class({
             this.state = TalkState.Over;
         }.bind(this), 0.3);
         if (this._bOptions) {
-            cc.ObserverMgr.dispatchMsg(cc.StoryMaster.Msg.PieceShowOptions, null);
+            if (this.piece) {
+                this.piece.node.emit(cc.StoryMaster.Msg.PieceShowOptions);
+            }
         } else {
             // TODO 自动测试
             // cc.ObserverMgr.dispatchMsg(cc.StoryMaster.Msg.OnPieceTalkOver, null);
