@@ -11,6 +11,7 @@ Vue.component('plot-item', {
         return {
             isRename: false,
             isSelected: false,
+            isHover: false,
 
             dragInsertType: null,
             isShowTopLine: false,
@@ -51,6 +52,18 @@ Vue.component('plot-item', {
             }
             return null;
         },
+        itemSelectClass() {
+            let ret = '';
+            if (this.isSelected && this.dragInsertType === null) {
+                ret += 'plot-item-selected';
+            }
+            if (this.isHover) {
+                if (!this.isSelected) {
+                    ret += 'plot-item-hover';
+                }
+            }
+            return ret;
+        },
     },
     methods: {
         _foldClass() {
@@ -65,13 +78,27 @@ Vue.component('plot-item', {
             // todo 通知事件
             Editor.Ipc.sendToPanel('story-master.plot', 'onItemFold', this.data);
         },
-        onMouseOver() {},
-        onMouseOut() {},
+        onMouseOver() {
+            // console.log('over');
+        },
+        onMouseOut() {
+            // console.log('out');
+        },
+        onMouseEnter() {
+            this.isHover = true;
+        },
+        onMouseLeave() {
+            this.isHover = false;
+        },
         onDragstart(event) {
             // 非常重要
             event.stopPropagation();
             event.dataTransfer.effectAllowed = 'move';
             event.dataTransfer.setData('text', this.data.id);
+
+            // let width = event.target.offsetWidth;
+            // let height = event.target.offsetHeight;
+            // event.dataTransfer.setDragImage(event.target, 0, 0);
         },
         onDragenter() {
             enterTemVar = this.data;
@@ -86,40 +113,36 @@ Vue.component('plot-item', {
         onDragover(event) {
             event.preventDefault();
             event.stopPropagation();
-            let id = event.dataTransfer.getData('text');
-            if (this.data.id === id) {
-                event.dataTransfer.dropEffect = 'none';
+            event.dataTransfer.dropEffect = 'move';
+            // console.log(`over ${this.data.name} ${new Date().getTime()}`);
+            let y = event.offsetY;
+            let height = event.currentTarget.offsetHeight;
+            if (2 <= y && y < height / 3) {
+                // console.log('before');
+                this.dragInsertType = PlotMsg.PlaceType.Before;
+            } else if (height / 3 <= y && y < (height / 3) * 2) {
                 this.dragInsertType = PlotMsg.PlaceType.In;
-            } else {
-                event.dataTransfer.dropEffect = 'move';
-                console.log(`over ${this.data.name} ${new Date().getTime()}`);
-
-                let y = event.offsetY;
-                let height = event.currentTarget.offsetHeight;
-                if (2 <= y && y < height / 3) {
-                    console.log('before');
-                    this.dragInsertType = PlotMsg.PlaceType.Before;
-                } else if (height / 3 <= y && y < (height / 3) * 2) {
-                    this.dragInsertType = PlotMsg.PlaceType.In;
-                } else if ((height / 3) * 2 <= y - 2) {
-                    this.dragInsertType = PlotMsg.PlaceType.After;
-                    console.log('after');
-                }
+            } else if ((height / 3) * 2 <= y - 2) {
+                this.dragInsertType = PlotMsg.PlaceType.After;
+                // console.log('after');
             }
         },
 
         onDrag(event) {
-            console.log('drag');
+            // console.log('drag');
         },
         onDrop(event) {
-            let id = event.dataTransfer.getData('text');
             let type = this.dragInsertType;
-            this.$root.$emit(PlotMsg.OnDragPlotItem, {
-                from: id,
-                to: this.data.id,
-                type: type,
-            });
+            let id = event.dataTransfer.getData('text');
             this.dragInsertType = null;
+            // 防止乱拖拽
+            if (id && id !== '' && id !== this.data.id) {
+                this.$root.$emit(PlotMsg.OnDragPlotItem, {
+                    from: id,
+                    to: this.data.id,
+                    type: type,
+                });
+            }
         },
         onPlotItemMenu(event) {
             this.$root.$emit(PlotMsg.OnPlotItemRightMenu, this.data);
@@ -128,6 +151,7 @@ Vue.component('plot-item', {
         onItemClick() {
             this.$root.$emit(Msg.PlotItemSelected, false);
             this.isSelected = true;
+            this.isHover = false;
             clearTimeout(this.clickTimer);
             this.clickTimer = setTimeout(() => {
                 Editor.Ipc.sendToPanel('story-master.piece', 'onPieceData', this.data);

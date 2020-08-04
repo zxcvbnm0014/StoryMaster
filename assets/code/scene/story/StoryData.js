@@ -1,4 +1,4 @@
-let StoryConfig = require("StoryConfig");
+let StoryConfig = require('StoryConfig');
 module.exports = {
     serializePlotArray: [],
     getUnitPiecePrefab() {
@@ -10,7 +10,7 @@ module.exports = {
                 for (let i = 0; i < item.length; i++) {
                     let piece = item[i];
                     if (piece.id === initData.unit) {
-                        return {piece: key, item: piece};
+                        return { piece: key, item: piece };
                     }
                 }
             }
@@ -20,14 +20,12 @@ module.exports = {
         }
     },
     getBeganPrefab() {
-        let plots = StoryConfig.file.plot.data;
-        let piece = plots[0].piece;
+        let piece = this.serializePlotArray[0].piece;
         let data = this.getPieceDataByID(piece);
         return data[0];
     },
     getBeganPlot() {
-        let plots = StoryConfig.file.plot.data;
-        return plots[0];
+        return this.serializePlotArray[0];
     },
     // 返回的plot是经过处理的
     getNextPlotData(plotID) {
@@ -66,7 +64,11 @@ module.exports = {
         this.serializePlotArray = array;
     },
     _serializePlot(data, array) {
-        array.push({id: data.id, name: data.name, piece: data.piece});
+        if (data.type === cc.StoryMaster.Type.Plot.Piece) {
+            array.push({ id: data.id, name: data.name, piece: data.piece });
+        } else {
+            cc.log(`过滤章节数据：${JSON.stringify(data)}`);
+        }
         for (let i = 0; i < data.children.length; i++) {
             this._serializePlot(data.children[i], array);
         }
@@ -143,4 +145,4 @@ module.exports = {
             }
         }
     },
-}
+};

@@ -32,23 +32,21 @@ Editor.Panel.extend({
             el: this.shadowRoot,
             created() {
                 console.log('created');
-                // TODO 将保存的piece数据放在主进程,当再次打开的时候去主进程获取
-                Editor.Ipc.sendToMain(
-                    'story-master:getPieceData',
-                    function(data, event) {
-                        let retDataTest = {
-                            selectPlot: null, // 选择的剧情
-                            OpenedPrefabID: null, // 打开的prefab
-                        };
-                        if (data.selectPlot) {
-                            this.setPieceData(data.selectPlot);
-                        }
-                        if (data.OpenedPrefabID) {
-                            OpenedPrefabID = data.OpenedPrefabID;
-                        }
-                    }.bind(this)
-                );
                 this.$root.$on(PieceMsg.OnPieceItemRightMenu, this._onItemRightMenu);
+                this.$root.$on(PieceMsg.OnDragPieceItem, this._onDragPieceItem);
+                // TODO 将保存的piece数据放在主进程,当再次打开的时候去主进程获取
+                Editor.Ipc.sendToMain('story-master:getPieceData', (data, event) => {
+                    let retDataTest = {
+                        selectPlot: null, // 选择的剧情
+                        OpenedPrefabID: null, // 打开的prefab
+                    };
+                    if (data.selectPlot) {
+                        this.setPieceData(data.selectPlot);
+                    }
+                    if (data.OpenedPrefabID) {
+                        OpenedPrefabID = data.OpenedPrefabID;
+                    }
+                });
             },
             data: {
                 plotData: null,
@@ -56,6 +54,45 @@ Editor.Panel.extend({
                 pieceData: [],
             },
             methods: {
+                _onDragPieceItem(data) {
+                    let bSucceed = false;
+                    const { Before, After } = PieceMsg.PlaceType;
+                    const { type, from, to } = data;
+
+                    let delItem = null;
+                    // 先从队列中删除
+                    for (let i = 0; i < this.pieceData.length; i++) {
+                        let item = this.pieceData[i];
+                        if (item.id === from) {
+                            delItem = this.pieceData.splice(i, 1)[0];
+                            break;
+                        }
+                    }
+
+                    // 加入队列
+                    if (delItem) {
+                        for (let i = 0; i < this.pieceData.length; i++) {
+                            let item = this.pieceData[i];
+                            if (item.id === to) {
+                                if (type === Before) {
+                                    this.pieceData.splice(i, 0, delItem);
+                                    bSucceed = true;
+                                    break;
+                                } else if (type === After) {
+                                    this.pieceData.splice(i + 1, 0, delItem);
+                                    bSucceed = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (bSucceed) {
+                        this._savePiece();
+                    } else {
+                        console.error('调整失败');
+                    }
+                },
                 _onItemRightMenu(data) {
                     let CopyPastData = { copy: CopyPieceItem, cut: CutPieceItem };
                     let bPast = false;
@@ -75,37 +112,9 @@ Editor.Panel.extend({
                 onPieceItemMenu(data, options) {
                     let template = [
                         {
-                            label: '插入模版片段(前边)',
-                            click: () => {
-                                this.onInsertItemBefore(data);
-                            },
-                        },
-                        {
-                            label: '插入模版片段(后边)',
+                            label: '插入模版',
                             click: () => {
                                 this.onInsertItemAfter(data);
-                            },
-                        },
-                        { type: 'separator' },
-                        {
-                            label: '上移',
-                            enabled: options && options.up,
-                            click: () => {
-                                this.onPieceMenuItemUp(data);
-                            },
-                        },
-                        {
-                            label: '下移',
-                            enabled: options && options.down,
-                            click: () => {
-                                this.onPieceMenuItemDown(data);
-                            },
-                        },
-                        {
-                            label: '下移到末尾',
-                            enabled: options && options.down,
-                            click: () => {
-                                this.onPieceMenuItemDownEnd(data);
                             },
                         },
                         { type: 'separator' },
@@ -249,25 +258,6 @@ Editor.Panel.extend({
                         }
                     }
                 },
-                onInsertItemBefore(data) {
-                    (async () => {
-                        let id = data.id;
-                        for (let i = 0; i < this.pieceData.length; i++) {
-                            let item = this.pieceData[i];
-                            if (item.id === id) {
-                                let insert = await this._genNewPiece();
-                                if (insert) {
-                                    this.pieceData.splice(i, 0, insert);
-                                    this._openPrefab(insert.id);
-                                    this._savePiece();
-                                    return;
-                                } else {
-                                }
-                            }
-                        }
-                        Editor.error('插入片段失败!');
-                    })();
-                },
                 onInsertItemAfter(data) {
                     (async () => {
                         let id = data.id;
@@ -394,9 +384,12 @@ Editor.Panel.extend({
                         let cfgData = JSON.parse(Fs.readFileSync(url, 'utf-8'));
 
                         if (cfgData[this.pieceID] !== undefined) {
-                            cfgData[this.pieceID] = this.pieceData;
-
-                            Fs.writeFileSync(url, JsonFormat(cfgData), 'utf-8');
+                            let str1 = JSON.stringify(cfgData[this.pieceID]);
+                            let str2 = JSON.stringify(this.pieceData);
+                            if (str1 !== str2) {
+                                cfgData[this.pieceID] = this.pieceData;
+                                Fs.writeFileSync(url, JsonFormat(cfgData), 'utf-8');
+                            }
 
                             if (isFresh === undefined || isFresh) {
                                 Editor.assetdb.refresh(StoryMaster.GameCfg.piece.plugin);
@@ -454,50 +447,6 @@ Editor.Panel.extend({
                             CutPieceItem = null;
                         }
                         bCutOrCopy = Op.None;
-                    }
-                },
-                onPieceMenuItemUp(data) {
-                    for (let i = 0; i < this.pieceData.length; i++) {
-                        let item = this.pieceData[i];
-                        if (item.id === data.id) {
-                            if (i === 0) {
-                                return;
-                            }
-                            let delItem = this.pieceData.splice(i, 1)[0];
-                            this.pieceData.splice(i - 1, 0, delItem);
-                            this._savePiece(true);
-                            break;
-                        }
-                    }
-                },
-                onPieceMenuItemDown(data) {
-                    for (let i = 0; i < this.pieceData.length; i++) {
-                        let item = this.pieceData[i];
-                        if (item.id === data.id) {
-                            if (i === this.pieceData.length - 1) {
-                                return;
-                            }
-
-                            let delItem = this.pieceData.splice(i, 1)[0];
-                            this.pieceData.splice(i + 1, 0, delItem);
-                            this._savePiece(true);
-                            break;
-                        }
-                    }
-                },
-                onPieceMenuItemDownEnd(data) {
-                    for (let i = 0; i < this.pieceData.length; i++) {
-                        let item = this.pieceData[i];
-                        if (item.id === data.id) {
-                            if (i === this.pieceData.length - 1) {
-                                return;
-                            }
-
-                            let delItem = this.pieceData.splice(i, 1)[0];
-                            this.pieceData.push(delItem);
-                            this._savePiece(true);
-                            break;
-                        }
                     }
                 },
 

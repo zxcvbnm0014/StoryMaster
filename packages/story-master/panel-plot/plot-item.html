@@ -1,6 +1,7 @@
 <div>
     <div class="layout vertical plot-item " :class="dragInsertClass"
          @mouseover="onMouseOver" @mouseout="onMouseOut"
+         @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
          @click="onItemClick"
          @drag="onDrag"
          @dragstart="onDragstart"
@@ -11,27 +12,23 @@
          :draggable="canDrag"
          @contextmenu="onPlotItemMenu">
 
-        <div v-show="isShowTopLine" class="insertLine" style="margin-bottom: -2px">
-
-        </div>
+        <div v-show="isShowTopLine" class="insertLine" style="margin-bottom: -2px"></div>
         <div class="layout horizontal center flex-1 " style="width: 100%;"
-             :class="{'plot-item-selected':isSelected}">
+             :class="itemSelectClass">
             <!--icon箭头 -->
             <i id="foldIcon" @click="onClickFold" :class="_foldClass()"
                :style="{visibility:data.children.length>0?'visible':'hidden'}"></i>
 
 
-            <img :src="typeIcon" class="plot-type-icon" alt="类型">
+            <img :src="typeIcon" class="plot-type-icon" alt="类型" draggable="false">
             <div v-show="!isRename" class="layout horizontal flex-1 center"
                  @dblclick="onDoubleClickRename" style="height: 100%;">
-                <div>{{data.name}}</div>
+                <div style="white-space: nowrap;text-overflow: ellipsis;">{{data.name}}</div>
             </div>
             <input v-show="isRename" v-el:rename class="flex-1 rename-input"
                    type="text" autofocus @blur="onChangeName" v-model="data.name">
         </div>
-        <div class="insertLine" v-show="isShowBottomLine" style="margin-top: -2px">
-
-        </div>
+        <div class="insertLine" v-show="isShowBottomLine" style="margin-top: -2px"></div>
     </div>
 
     <div v-show="!data.fold" style="margin-left: 20px;">

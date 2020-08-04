@@ -1,20 +1,20 @@
-let GameUtil = require("GameUtil");
-let StoryData = require("StoryData");
-let StoryAudioMgr = require("StoryAudioMgr");
+let GameUtil = require('GameUtil');
+let StoryData = require('StoryData');
+let StoryAudioMgr = require('StoryAudioMgr');
 
 
 cc.Class({
-    extends: require("Observer"),
+    extends: require('Observer'),
 
     properties: {
-        storyNode: {default: null, displayName: "故事节点", type: cc.Node},
-        touchNode: {default: null, displayName: "触摸节点", type: cc.Node},
-        touchEffect: {default: null, displayName: "点击特效", type: cc.Prefab},
+        storyNode: { default: null, displayName: '故事节点', type: cc.Node },
+        touchNode: { default: null, displayName: '触摸节点', type: cc.Node },
+        touchEffect: { default: null, displayName: '点击特效', type: cc.Prefab },
         isTest: false,
 
-        _piece: null,// 当前正在播放的页面{}
-        _pieceData: null,// 当前所有的页面[]
-        _plotData: null,// 当前所在的剧情[]
+        _piece: null, // 当前正在播放的页面{}
+        _pieceData: null, // 当前所有的页面[]
+        _plotData: null, // 当前所在的剧情[]
         _clickeffect: null,
     },
 
@@ -148,7 +148,7 @@ cc.Class({
                 }
             }
         } else {
-            this._onPieceTips("未发现要测试的故事");
+            this._onPieceTips('未发现要测试的故事');
         }
     },
 
@@ -161,14 +161,26 @@ cc.Class({
 
     },
 
-    _playNewPlot(plotID, prefabID) {
+    _playNewPlot(plotID) {
         let plotData = StoryData.getPlotDataByID(plotID);
         if (plotData) {
             this._plotData = plotData;
             let pieceData = StoryData.getPieceDataByID(plotData.piece);
+
             if (pieceData) {
-                this._pieceData = pieceData;
-                this.createPiece(pieceData[0]);
+                if (pieceData.length > 0) {
+                    this._pieceData = pieceData;
+                    this.createPiece(pieceData[0]);
+                } else {
+                    console.warn('当前剧情没有画布，自动跳转到下个剧情', plotData);
+                    let data = StoryData.getNextPlotData(plotID);
+
+                    if (data) {
+                        this._playNewPlot(data.id);
+                    } else {
+                        cc.error('没有找到可以播放的剧情，游戏结束');
+                    }
+                }
             } else {
                 console.log(`无效的piece: ${plotData.piece}`);
             }
@@ -206,7 +218,7 @@ cc.Class({
                     }
                 }.bind(this));
             } else {
-                console.log("piece 数据无效")
+                console.log('piece 数据无效');
             }
         } else if (pieceData && pieceData.type === cc.StoryMaster.Type.Pieces.PlotJump) {
             // todo 判断jump的有效性
@@ -218,7 +230,7 @@ cc.Class({
                 // 无效的jump不会被打断,会继续执行接下来的逻辑
             }
         } else {
-            console.log(`未知的piece`);
+            console.log('未知的piece');
         }
     },
     start() {
