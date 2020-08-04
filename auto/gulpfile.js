@@ -76,6 +76,28 @@ gulp.task('打包插件-debug', function() {
         ignorePanel: ['test'],
     });
 });
+gulp.task('copy-to-test', () => {
+    let demoDir = path.join(__dirname, '../../story-master-plugin-demo');
+    if (!fs.existsSync(demoDir)) {
+        console.error('demo项目不存在，请新建项目:', demoDir);
+        return;
+    }
+    let packages = path.join(demoDir, 'packages');
+    if (!fs.existsSync(packages)) {
+        console.log('packages目录不存在');
+        return;
+    }
+
+    let source = path.join(__dirname, '../out/story-master');
+    let dest = path.join(packages, 'story-master');
+    if (!fs.existsSync(source)) {
+        console.log('不存在插件源码', source);
+        return;
+    }
+
+    fse.copySync(source, dest);
+    console.log('ok');
+});
 // 打包插件
 var packagePlugin = function(pluginDirName, options) {
     let isCompress = options.isCompress;

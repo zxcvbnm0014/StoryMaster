@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/fs-extra": "^9.0.1",
     "fs-extra": "^7.0.0",
     "globby": "^9.2.0",
     "gulp": "^3.9.1",
