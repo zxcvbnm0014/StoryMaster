@@ -1,7 +1,7 @@
 {
   "name": "story-master",
-  "version": "0.1.0",
-  "description": "故事编辑器",
+  "version": "1.0.0",
+  "description": "故事编辑器插件",
   "author": "xu_yanfeng",
   "public": false,
   "public-time": "2019/04/23",
