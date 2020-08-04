@@ -9,6 +9,7 @@ module.exports = {
 
     'packages/story-master/**/*.js': files => {
         const match = micromatch.not(files, ['packages/story-master/panel-test/vue.js']);
+        console.log('-------------------------------------------')
         if (match.length < 1) {
             return ['git add'];
         }
