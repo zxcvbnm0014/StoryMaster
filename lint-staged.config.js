@@ -9,13 +9,12 @@ module.exports = {
 
     'packages/story-master/**/*.js': files => {
         const match = micromatch.not(files, ['**/packages/story-master/panel-test/vue.js']);
-        console.log('--file' + JSON.stringify(files));
-        if (match.length < 1) {
-            console.log('git add')
-            return ['git add'];
+        if (match.length >= 1) {
+            console.log(`files: ${JSON.stringify(files)}`);
+            return [`eslint --fix "${match.join(' ')}" `];
+        } else {
+            return [];
         }
-        console.log('git lalalal')
-        return [`eslint --fix "${match.join(' ')}" `, 'git add'];
     },
     'packages/story-master/**/*.css': [
         'stylelint --fix',
