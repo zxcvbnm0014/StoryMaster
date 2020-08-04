@@ -10,6 +10,7 @@ cc.Class({
         storyNode: { default: null, displayName: '故事节点', type: cc.Node },
         touchNode: { default: null, displayName: '触摸节点', type: cc.Node },
         touchEffect: { default: null, displayName: '点击特效', type: cc.Prefab },
+        loadingNode: cc.Node,
         isTest: false,
 
         _piece: null, // 当前正在播放的页面{}
@@ -61,7 +62,9 @@ cc.Class({
         } else if (msg === cc.StoryMaster.Msg.OnEnableGlobalTouch) {
             this.touchNode.active = !!data;
         } else if (msg === cc.StoryMaster.Msg.OnGameLoading) {
-            // todo loading
+            if (this.loadingNode) {
+                this.loadingNode.active = !!data;
+            }
         }
     },
 
