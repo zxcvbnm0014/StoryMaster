@@ -11,9 +11,9 @@ module.exports = {
         const match = micromatch.not(files, ['**/packages/story-master/panel-test/vue.js']);
         if (match.length >= 1) {
             console.log(`files: ${JSON.stringify(files)}`);
-            return [`eslint --fix "${match.join(' ')}" `];
+            return [`eslint --fix "${match.join(' ')}" `, 'git add'];
         } else {
-            return [];
+            return ['git add'];
         }
     },
     'packages/story-master/**/*.css': [
