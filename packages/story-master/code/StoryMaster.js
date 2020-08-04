@@ -4,6 +4,7 @@ let StoryMaster = {
         OnPieceTalkOver: 'StoryMaster_Msg_OnPieceTalkOver', // 对话结束
         OnGoNextPiece: 'StoryMaster_Msg_OnGoNextPiece',
         OnEnableGlobalTouch: 'StoryMaster_Msg_OnEnableGlobalTouch',
+        OnGameLoading: 'StoryMaster_Msg_OnGameLoading',
         PieceHasOptions: 'StoryMaster_Msg_PieceHasOptions',
         PieceShowOptions: 'StoryMaster_Msg_PieceShowOptions',
         UserTouch: 'StoryMaster_Msg_UserTouch', // 用户点击

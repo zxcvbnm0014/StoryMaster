@@ -23,6 +23,7 @@ cc.Class({
             cc.StoryMaster.Msg.OnGoNextPiece,
             cc.StoryMaster.Msg.OnJumpNewPlot,
             cc.StoryMaster.Msg.OnEnableGlobalTouch,
+            cc.StoryMaster.Msg.OnGameLoading,
         ];
     },
 
@@ -70,6 +71,8 @@ cc.Class({
             // }
         } else if (msg === cc.StoryMaster.Msg.OnEnableGlobalTouch) {
             this.touchNode.active = !!data;
+        } else if (msg === cc.StoryMaster.Msg.OnGameLoading) {
+            // todo loading
         }
     },
 
@@ -189,38 +192,46 @@ cc.Class({
         }
     },
 
+    _onInstancePiece (prefab, pieceData) {
+        cc.ObserverMgr.dispatchMsg(cc.StoryMaster.Msg.OnEnableGlobalTouch, true);
+        StoryAudioMgr.cleanAudioEffect();
+        this.storyNode.destroyAllChildren();
+        let node = cc.instantiate(prefab);
+        let size = cc.view.getVisibleSize();
+        node.x = node.y = 0;
+        node.width = size.width;
+        node.height = size.height;
+        this.storyNode.addChild(node);
+
+        let script = node.getComponent('StoryPiece');
+        if (script) {
+            script.pieceItem = pieceData;
+        }
+        require('StoryPreload').preloadNextPiece(pieceData);
+    },
+
     createPiece (pieceData) {
         if (pieceData && pieceData.type === cc.StoryMaster.Type.Pieces.Content ||
-            pieceData.type === undefined// 这个判断是为了兼容老数据
-        ) {
+            // 这个判断是为了兼容老数据
+            pieceData.type === undefined) {
             let prefabUrl = pieceData.prefab;
             if (prefabUrl) {
                 cc.ObserverMgr.dispatchMsg(cc.StoryMaster.Msg.OnEnableGlobalTouch, false);
                 prefabUrl = GameUtil.transformUrl(prefabUrl);
                 let ret = cc.loader.getRes(prefabUrl);
                 if (ret) {
-
-                }
-                cc.loader.loadRes(prefabUrl, (error, prefab) => {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        cc.ObserverMgr.dispatchMsg(cc.StoryMaster.Msg.OnEnableGlobalTouch, true);
-                        StoryAudioMgr.cleanAudioEffect();
-                        this.storyNode.destroyAllChildren();
-                        let node = cc.instantiate(prefab);
-                        let size = cc.view.getVisibleSize();
-                        node.x = node.y = 0;
-                        node.width = size.width;
-                        node.height = size.height;
-                        this.storyNode.addChild(node);
-
-                        let script = node.getComponent('StoryPiece');
-                        if (script) {
-                            script.pieceItem = pieceData;
+                    this._onInstancePiece(ret, pieceData);
+                } else {
+                    cc.ObserverMgr.dispatchMsg(cc.StoryMaster.Msg.OnGameLoading, true);
+                    cc.loader.loadRes(prefabUrl, (error, prefab) => {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            cc.ObserverMgr.dispatchMsg(cc.StoryMaster.Msg.OnGameLoading, false);
+                            this._onInstancePiece(prefab, pieceData);
                         }
-                    }
-                });
+                    });
+                }
             } else {
                 console.log('piece 数据无效');
             }
