@@ -18,7 +18,7 @@ cc.Class({
         _clickeffect: null,
     },
 
-    _getMsgList() {
+    _getMsgList () {
         return [
             cc.StoryMaster.Msg.OnGoNextPiece,
             cc.StoryMaster.Msg.OnJumpNewPlot,
@@ -26,7 +26,7 @@ cc.Class({
         ];
     },
 
-    _onMsg(msg, data) {
+    _onMsg (msg, data) {
         if (msg === cc.StoryMaster.Msg.OnGoNextPiece) {
             // 进行下一个故事片段
             let prefabID = data.id;
@@ -73,7 +73,7 @@ cc.Class({
         }
     },
 
-    _jumpToSelectedPlot(data) {
+    _jumpToSelectedPlot (data) {
         if (data.extra) {
             let extra = data.extra;
             let node = cc.instantiate(extra.effect);
@@ -85,7 +85,7 @@ cc.Class({
         this._playNewPlot(data.jumpData);
     },
 
-    _onTouchEnd(ev) {
+    _onTouchEnd (ev) {
         if (this.touchEffect) {
             let node = cc.instantiate(this.touchEffect);
 
@@ -102,7 +102,7 @@ cc.Class({
         cc.ObserverMgr.dispatchMsg(cc.StoryMaster.Msg.UserTouch, null);
     },
 
-    _initTouch() {
+    _initTouch () {
         let size = cc.view.getVisibleSize();
         this.touchNode.width = size.width;
         this.touchNode.height = size.height;
@@ -110,7 +110,7 @@ cc.Class({
         this.touchNode.on(cc.Node.EventType.TOUCH_END, this._onTouchEnd, this);
     },
 
-    onLoad() {
+    onLoad () {
         cc.debug.setDisplayStats(false);
         cc.StoryConfig.init(function () {
             this._initMsg();
@@ -126,7 +126,7 @@ cc.Class({
         }.bind(this));
     },
 
-    _onPieceTips(tips) {
+    _onPieceTips (tips) {
         this.storyNode.destroyAllChildren();
         let node = new cc.Node();
         let label = node.addComponent(cc.Label);
@@ -135,7 +135,7 @@ cc.Class({
         this.touchNode.off(cc.Node.EventType.TOUCH_END, this._onTouchEnd, this);
     },
 
-    startWithDebug() {
+    startWithDebug () {
         let cfg = StoryData.getUnitPiecePrefab();
         if (cfg) {
             let plotData = StoryData.getPlotDataByPieceID(cfg.piece);
@@ -152,16 +152,16 @@ cc.Class({
         }
     },
 
-    startWithNormal() {
+    startWithNormal () {
         let plot = StoryData.getBeganPlot();
         this._playNewPlot(plot.id);
     },
 
-    _playNextPiece() {
+    _playNextPiece () {
 
     },
 
-    _playNewPlot(plotID) {
+    _playNewPlot (plotID) {
         let plotData = StoryData.getPlotDataByID(plotID);
         if (plotData) {
             this._plotData = plotData;
@@ -189,7 +189,7 @@ cc.Class({
         }
     },
 
-    createPiece(pieceData) {
+    createPiece (pieceData) {
         if (pieceData && pieceData.type === cc.StoryMaster.Type.Pieces.Content ||
             pieceData.type === undefined// 这个判断是为了兼容老数据
         ) {
@@ -197,7 +197,11 @@ cc.Class({
             if (prefabUrl) {
                 cc.ObserverMgr.dispatchMsg(cc.StoryMaster.Msg.OnEnableGlobalTouch, false);
                 prefabUrl = GameUtil.transformUrl(prefabUrl);
-                cc.loader.loadRes(prefabUrl, function (error, prefab) {
+                let ret = cc.loader.getRes(prefabUrl);
+                if (ret) {
+
+                }
+                cc.loader.loadRes(prefabUrl, (error, prefab) => {
                     if (error) {
                         console.log(error);
                     } else {
@@ -216,7 +220,7 @@ cc.Class({
                             script.pieceItem = pieceData;
                         }
                     }
-                }.bind(this));
+                });
             } else {
                 console.log('piece 数据无效');
             }
@@ -233,7 +237,7 @@ cc.Class({
             console.log('未知的piece');
         }
     },
-    start() {
+    start () {
 
     },
 
