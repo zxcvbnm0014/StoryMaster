@@ -43,6 +43,7 @@ cc.Class({
                 this._pieceData = null;
                 this._piece = null;
                 // 故事完结
+                cc.warn('故事完结');
                 // this._onPieceTips("故事结束");
                 StoryAudioMgr.stopAll();
                 this.touchNode.off(cc.Node.EventType.TOUCH_END, this._onTouchEnd, this);
