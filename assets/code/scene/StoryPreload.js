@@ -1,10 +1,12 @@
+const StoryData = require('StoryData');
+const GameUtil = require('GameUtil');
 module.exports = {
     _getNextPlot (plotData) {
         let nextPlotData = StoryData.getNextPlotData(plotData.id);
         if (nextPlotData) {
             let piece = StoryData.getPieceDataByID(nextPlotData.piece);
             if (piece && piece.length > 0) {
-                return piece[0];
+                return { next: piece[0], piece: piece, plot: nextPlotData };
             } else {
                 // TODO 剧情的画布数量为0,寻找下个剧情
                 return this._getNextPlot(nextPlotData);
@@ -14,21 +16,23 @@ module.exports = {
             return null;
         }
     },
-    preloadNextPiece (plotData, pieceData) {
-        const StoryData = require('StoryData');
-        let nextPiece = null;
+    getNextPiece (plotData, pieceData) {
+        // let pieceItem = StoryData.getNextPieceItemByPrefabID(pieceData.id);
         let pieceItem = StoryData.getNextPieceItemByKeyAndPrefab(plotData.piece, pieceData.id);
-
         if (pieceItem) {
             // 找到剧情的下个piece
-            nextPiece = pieceItem;
+            return { next: pieceItem, piece: pieceData, plot: plotData };
         } else {
-            // 到达该剧情的尾部，寻找下个剧情
-            nextPiece = this._getNextPlot(plotData);
+            // 到达该剧情的尾部，如果没有跳转，寻找下个剧情
+            // TODO 对跳转类型的判断
+            return this._getNextPlot(plotData);
         }
-
-        if (nextPiece) {
-            let prefabUrl = GameUtil.transformUrl(nextPiece.prefab);
+    },
+    preloadNextPiece (plotData, pieceData) {
+        let nextPieceInfo = this.getNextPiece(plotData, pieceData);
+        if (nextPieceInfo) {
+            let nextPiece = nextPieceInfo.next.prefab;
+            let prefabUrl = GameUtil.transformUrl(nextPiece);
             cc.loader.loadRes(prefabUrl);
         }
     },

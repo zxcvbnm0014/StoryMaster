@@ -30,32 +30,21 @@ cc.Class({
     _onMsg (msg, data) {
         if (msg === cc.StoryMaster.Msg.OnGoNextPiece) {
             // 进行下一个故事片段
-            let prefabID = data.id;
-            // let pieceItem = StoryData.getNextPieceItemByPrefabID(prefabID);
-            // 这种方式计算量会小一点
-            let pieceItem = StoryData.getNextPieceItemByKeyAndPrefab(this._plotData.piece, prefabID);
-
-            if (pieceItem) {
+            const StoryPreload = require('StoryPreload');
+            let pieceItemInfo = StoryPreload.getNextPiece(this._plotData, data);
+            if (pieceItemInfo) {
+                let pieceItem = pieceItemInfo.next;
+                this._pieceData = pieceItemInfo.piece;
+                this._plotData = pieceItemInfo.plot;
                 this.createPiece(pieceItem);
             } else {
-                // 当前的剧情已经播放完毕,如果没有跳转,寻找下个有效的剧情
-                let plotData = StoryData.getNextPlotData(this._plotData.id);
-                if (plotData) {
-                    this._plotData = plotData;
-                    let piece = StoryData.getPieceDataByID(plotData.piece);
-                    if (piece) {
-                        this._pieceData = piece;
-                        this.createPiece(piece[0]);
-                    }
-                } else {
-                    this._plotData = null;
-                    this._pieceData = null;
-                    this._piece = null;
-                    // 故事完结
-                    // this._onPieceTips("故事结束");
-                    StoryAudioMgr.stopAll();
-                    this.touchNode.off(cc.Node.EventType.TOUCH_END, this._onTouchEnd, this);
-                }
+                this._plotData = null;
+                this._pieceData = null;
+                this._piece = null;
+                // 故事完结
+                // this._onPieceTips("故事结束");
+                StoryAudioMgr.stopAll();
+                this.touchNode.off(cc.Node.EventType.TOUCH_END, this._onTouchEnd, this);
             }
         } else if (msg === cc.StoryMaster.Msg.OnJumpNewPlot) {
             this._jumpToSelectedPlot(data);
