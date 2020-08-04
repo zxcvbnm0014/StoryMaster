@@ -14,10 +14,10 @@ Editor.Panel.extend({
     style: Core.loadFile('panel-plot/index.css'),
     template: Core.loadFile('panel-plot/index.html'),
 
-    ready() {
+    ready () {
         this.plugin = new window.Vue({
             el: this.shadowRoot,
-            created() {
+            created () {
                 let url = Editor.url(StoryMaster.GameCfg.plot.plugin);
                 if (Fs.existsSync(url)) {
                     let data = Fs.readFileSync(url, 'utf-8');
@@ -39,12 +39,12 @@ Editor.Panel.extend({
             },
             methods: {
                 // 是否为父子关系
-                _isFatherSonRelationship(parent, son) {
+                _isFatherSonRelationship (parent, son) {
                     let data = this._findItemByID(this.plotData, parent);
                     if (data) {
                         let ret = false;
 
-                        function adjust(item) {
+                        function adjust (item) {
                             for (let i = 0; i < item.children.length; i++) {
                                 let value = item.children[i];
                                 if (value.id === son) {
@@ -63,7 +63,7 @@ Editor.Panel.extend({
                     }
                     return false;
                 },
-                _onDragPlotItem(data) {
+                _onDragPlotItem (data) {
                     let { type, from, to } = data;
                     const { Before, After, In } = PlotMsg.PlaceType;
                     if (this._isFatherSonRelationship(from, to)) {
@@ -95,14 +95,14 @@ Editor.Panel.extend({
                         }
                     }
                 },
-                _getCfgData() {
+                _getCfgData () {
                     let url = Editor.url(StoryMaster.GameCfg.plot.plugin);
                     if (Fs.existsSync(url)) {
                         return Fs.readFileSync(url, 'utf-8');
                     }
                     return null;
                 },
-                _setCfgData(data) {
+                _setCfgData (data) {
                     let url = Editor.url(StoryMaster.GameCfg.plot.plugin);
                     if (Fs.existsSync(url)) {
                         let formatData = JsonFormat(data);
@@ -113,10 +113,10 @@ Editor.Panel.extend({
                         }
                     }
                 },
-                _updatePlotData(rootData) {
+                _updatePlotData (rootData) {
                     let bChange = false;
 
-                    function _deepUpdateItem(data) {
+                    function _deepUpdateItem (data) {
                         for (let i = 0; i < data.length; i++) {
                             let item = data[i];
                             if (item.type === undefined) {
@@ -136,7 +136,7 @@ Editor.Panel.extend({
                     }
                     return rootData;
                 },
-                getCutItemID() {
+                getCutItemID () {
                     let id = null;
                     let parent = null;
                     if (CutPlotItem && CutPlotItem.root === false) {
@@ -146,7 +146,7 @@ Editor.Panel.extend({
                     }
                     return { id, parent };
                 },
-                OnPlotItemRightMenu(data) {
+                OnPlotItemRightMenu (data) {
                     let { id, parent } = this.getCutItemID();
                     let bPast = true;
                     if (id) {
@@ -165,7 +165,7 @@ Editor.Panel.extend({
                     this._createPlotItemMenu(data, options);
                 },
 
-                _createPlotItemMenu(data, options) {
+                _createPlotItemMenu (data, options) {
                     let template = [
                         {
                             label: '添加章节',
@@ -212,7 +212,7 @@ Editor.Panel.extend({
                     ];
                     RightMenu.createRightMenu(template);
                 },
-                delItem(data) {
+                delItem (data) {
                     let result = Editor.Dialog.messageBox({
                         type: 'question',
                         title: '提示',
@@ -238,7 +238,7 @@ Editor.Panel.extend({
                     }
                 },
 
-                _insertTo(fromID, toID, type) {
+                _insertTo (fromID, toID, type) {
                     let bSucceed = false;
                     let parentData = this._findItemParentById(this.plotData, fromID);
                     let delItem = this._spliceItemFromParent(parentData, fromID);
@@ -265,7 +265,7 @@ Editor.Panel.extend({
                     }
                 },
 
-                _spliceItemFromParent(parent, id) {
+                _spliceItemFromParent (parent, id) {
                     let delItem = null;
                     for (let i = 0; i < parent.children.length; i++) {
                         let item = parent.children[i];
@@ -276,7 +276,7 @@ Editor.Panel.extend({
                     }
                     return delItem;
                 },
-                _findItemParentById(root, id) {
+                _findItemParentById (root, id) {
                     let children = root.children;
                     if (children.length === 0) {
                         return null;
@@ -303,7 +303,7 @@ Editor.Panel.extend({
                     }
                 },
 
-                _findItemByID(data, id) {
+                _findItemByID (data, id) {
                     if (data.id === id) {
                         return data;
                     }
@@ -320,7 +320,7 @@ Editor.Panel.extend({
                     return null;
                 },
 
-                createNewPlot(type, index) {
+                createNewPlot (type, index) {
                     let pieceID = Editor.Utils.UuidUtils.uuid();
                     let name = '';
                     if (cc.StoryMaster.Type.Plot.Piece === type) {
@@ -343,7 +343,7 @@ Editor.Panel.extend({
                     };
                 },
 
-                addItem(data, type) {
+                addItem (data, type) {
                     let ret = this._findItemByID(this.plotData, data.id);
                     if (ret) {
                         let names = [];
@@ -367,7 +367,7 @@ Editor.Panel.extend({
                     }
                 },
 
-                _addNewPiece(id) {
+                _addNewPiece (id) {
                     let url = Editor.url(StoryMaster.GameCfg.piece.plugin);
                     if (Fs.existsSync(url)) {
                         let originData = Fs.readFileSync(url, 'utf-8');
@@ -384,16 +384,16 @@ Editor.Panel.extend({
                         return false;
                     }
                 },
-                _savePlot() {
+                _savePlot () {
                     this._setCfgData(this.plotData.children);
                 },
-                onPlotMenuItemCopy(data) {
+                onPlotMenuItemCopy (data) {
                     CutPlotItem = data;
                 },
-                onPlotMenuItemCut(data) {
+                onPlotMenuItemCut (data) {
                     CutPlotItem = data;
                 },
-                onPlotMenuItemPast(data) {
+                onPlotMenuItemPast (data) {
                     if (CutPlotItem) {
                         let ret = this._findItemParentById(this.plotData, CutPlotItem.id);
                         // todo 验证下 将剪切的数据从原来的地方删除了
@@ -416,7 +416,7 @@ Editor.Panel.extend({
     },
 
     messages: {
-        onItemFold(event, data) {
+        onItemFold (event, data) {
             // 优化为内部消息
             this.plugin._savePlot();
         },
