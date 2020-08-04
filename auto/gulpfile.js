@@ -64,6 +64,7 @@ gulp.task('打包插件-release', function() {
         dontCopyFile: ['panel-test', 'temp'],
         dontMinJs: [],
         isRemoveTmp: true,
+        ignorePanel: ['test'],
     });
 });
 gulp.task('打包插件-debug', function() {
@@ -72,6 +73,7 @@ gulp.task('打包插件-debug', function() {
         dontCopyFile: ['panel-test', 'temp'],
         dontMinJs: [],
         isRemoveTmp: false,
+        ignorePanel: ['test'],
     });
 });
 // 打包插件
@@ -204,6 +206,16 @@ var packagePlugin = function(pluginDirName, options) {
     if (devDependencies) {
         delete json['devDependencies'];
         console.log('✅[丢弃] 无用devDependencies');
+    }
+    // 删除测试面板字段
+    if (Array.isArray(options.ignorePanel)) {
+        options.ignorePanel.forEach(item => {
+            let panelData = json[`panel.${item}`];
+            if (panelData) {
+                delete json[`panel.${item}`];
+                console.log(`✅[丢弃] 无用面板：${item}`);
+            }
+        });
     }
 
     // 修改构建时间
