@@ -1,6 +1,9 @@
 const micromatch = require('micromatch');
 
 module.exports = {
+    'packages/story-master/panel-test/*.js': [
+        'git add',
+    ],
     'packages/story-master/**/*.js': [
         'prettier --write',
         'eslint --fix',
