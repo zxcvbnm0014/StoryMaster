@@ -1,7 +1,7 @@
 let StoryConfig = require('StoryConfig');
 module.exports = {
     serializePlotArray: [],
-    getUnitPiecePrefab() {
+    getUnitPiecePrefab () {
         let initData = StoryConfig.file.init.data;
         if (initData.unit) {
             let pieces = StoryConfig.file.piece.data;
@@ -19,16 +19,16 @@ module.exports = {
             return null;
         }
     },
-    getBeganPrefab() {
+    getBeganPrefab () {
         let piece = this.serializePlotArray[0].piece;
         let data = this.getPieceDataByID(piece);
         return data[0];
     },
-    getBeganPlot() {
+    getBeganPlot () {
         return this.serializePlotArray[0];
     },
     // 返回的plot是经过处理的
-    getNextPlotData(plotID) {
+    getNextPlotData (plotID) {
         for (let i = 0; i < this.serializePlotArray.length; i++) {
             let item = this.serializePlotArray[i];
             if (item.id === plotID) {
@@ -41,7 +41,7 @@ module.exports = {
         }
         return null;
     },
-    _findValidPiece(index) {
+    _findValidPiece (index) {
         for (let i = index; i < this.serializePlotArray.length; i++) {
             let item = this.serializePlotArray[i];
             let pieceData = this.getPieceDataByID(item.piece);
@@ -53,7 +53,7 @@ module.exports = {
         }
         return null;
     },
-    serializePlot() {
+    serializePlot () {
         // 将所有的pieces按照顺序放在一个array里面
         let array = [];
         let root = StoryConfig.file.plot.data;
@@ -63,18 +63,18 @@ module.exports = {
         }
         this.serializePlotArray = array;
     },
-    _serializePlot(data, array) {
+    _serializePlot (data, array) {
         if (data.type === cc.StoryMaster.Type.Plot.Piece) {
             array.push({ id: data.id, name: data.name, piece: data.piece });
         } else {
-            cc.log(`过滤章节数据：${JSON.stringify(data)}`);
+            cc.log(`过滤章节数据：${data.name}`);
         }
         for (let i = 0; i < data.children.length; i++) {
             this._serializePlot(data.children[i], array);
         }
     },
 
-    getPlotDataByPieceID(pieceID) {
+    getPlotDataByPieceID (pieceID) {
         for (let i = 0; i < this.serializePlotArray.length; i++) {
             let item = this.serializePlotArray[i];
             if (item.piece === pieceID) {
@@ -83,7 +83,7 @@ module.exports = {
         }
         return null;
     },
-    getPlotDataByID(id) {
+    getPlotDataByID (id) {
         for (let i = 0; i < this.serializePlotArray.length; i++) {
             let item = this.serializePlotArray[i];
             if (item.id === id) {
@@ -92,7 +92,7 @@ module.exports = {
         }
         return null;
     },
-    getPieceDataByPlotID(plotID) {
+    getPieceDataByPlotID (plotID) {
         let plotData = this.getPlotDataByID(plotID);
         if (plotData) {
             let pieceData = this.getPieceDataByID(plotData.piece);
@@ -100,7 +100,7 @@ module.exports = {
         }
         return null;
     },
-    getPieceDataByID(pieceID) {
+    getPieceDataByID (pieceID) {
         let pieces = StoryConfig.file.piece.data;
         for (let key in pieces) {
             let item = pieces[key];
@@ -110,7 +110,7 @@ module.exports = {
         }
         return null;
     },
-    getNextPieceItemByPrefabID(prefabID) {
+    getNextPieceItemByPrefabID (prefabID) {
         let pieces = StoryConfig.file.piece.data;
         for (let key in pieces) {
             let item = pieces[key];
@@ -128,7 +128,7 @@ module.exports = {
         }
         return null;
     },
-    getNextPieceItemByKeyAndPrefab(pieceKey, prefab) {
+    getNextPieceItemByKeyAndPrefab (pieceKey, prefab) {
         let pieces = StoryConfig.file.piece.data;
 
         if (pieces && pieces[pieceKey]) {
