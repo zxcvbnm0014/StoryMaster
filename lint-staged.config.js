@@ -1,7 +1,7 @@
 const micromatch = require('micromatch');
 
 module.exports = {
-    'packages/story-master/panel-test/*.js': [
+    'packages/story-master/panel-test/vue.js': [
         'git add',
     ],
     'packages/story-master/**/*.js': [
