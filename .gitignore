@@ -13,3 +13,4 @@ build
 *.swp
 *.swo
 node_modules/
+/out
